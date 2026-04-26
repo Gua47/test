@@ -1,429 +1,3 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>种树郭橐驼传 - 语文闯关</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-            background: linear-gradient(135deg, #1a3a1a 0%, #2d5a27 50%, #1a3a1a 100%);
-            min-height: 100vh;
-            color: #f5f0e0;
-            overflow-x: hidden;
-        }
-        .game-container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 15px;
-            min-height: 100vh;
-            position: relative;
-        }
-        /* 首页 */
-        .home-screen {
-            text-align: center;
-            padding-top: 30px;
-        }
-        .title {
-            font-size: 2.2em;
-            color: #d4a574;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            font-size: 1em;
-            color: #b8d4a8;
-            margin-bottom: 5px;
-        }
-        .author {
-            font-size: 0.9em;
-            color: #8fbc8f;
-            margin-bottom: 30px;
-        }
-        .tree-icon {
-            font-size: 4em;
-            margin: 20px 0;
-            animation: sway 3s ease-in-out infinite;
-        }
-        @keyframes sway {
-            0%, 100% { transform: rotate(-3deg); }
-            50% { transform: rotate(3deg); }
-        }
-        .btn {
-            display: block;
-            width: 80%;
-            max-width: 300px;
-            margin: 12px auto;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #d4a574, #c4956a);
-            color: #1a3a1a;
-            font-weight: bold;
-        }
-        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(212,165,116,0.4); }
-        .btn-secondary {
-            background: rgba(255,255,255,0.15);
-            color: #f5f0e0;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        .btn-secondary:hover { background: rgba(255,255,255,0.25); }
-        .locked { opacity: 0.5; pointer-events: none; }
-        /* 关卡选择 */
-        .level-select {
-            display: none;
-            padding-top: 20px;
-        }
-        .level-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .level-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        .level-card:hover:not(.locked) {
-            transform: translateY(-5px);
-            border-color: #d4a574;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        .level-card.locked {
-            background: rgba(0,0,0,0.2);
-        }
-        .level-num {
-            font-size: 2em;
-            color: #d4a574;
-            font-weight: bold;
-        }
-        .level-name {
-            font-size: 0.9em;
-            margin-top: 5px;
-            color: #b8d4a8;
-        }
-        .level-stars {
-            margin-top: 8px;
-            font-size: 1.2em;
-        }
-        /* 游戏界面 */
-        .game-screen {
-            display: none;
-            padding-top: 10px;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 5px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        .progress-info {
-            font-size: 0.85em;
-        }
-        .score-display {
-            font-size: 1.2em;
-            color: #ffd700;
-        }
-        .timer {
-            font-size: 1.1em;
-            color: #ff8c8c;
-        }
-        .question-box {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            min-height: 120px;
-        }
-        .question-type {
-            display: inline-block;
-            background: #d4a574;
-            color: #1a3a1a;
-            padding: 3px 12px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            margin-bottom: 10px;
-        }
-        .question-text {
-            font-size: 1.15em;
-            line-height: 1.6;
-        }
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .option {
-            background: rgba(255,255,255,0.08);
-            border: 2px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            padding: 14px 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 1em;
-            line-height: 1.5;
-        }
-        .option:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: #d4a574;
-        }
-        .option.correct {
-            background: rgba(76,175,80,0.3);
-            border-color: #4caf50;
-        }
-        .option.wrong {
-            background: rgba(244,67,54,0.3);
-            border-color: #f44336;
-        }
-        .option.disabled { pointer-events: none; }
-        /* 结果弹窗 */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal {
-            background: linear-gradient(135deg, #2d5a27, #1a3a1a);
-            border-radius: 20px;
-            padding: 30px 20px;
-            text-align: center;
-            max-width: 350px;
-            width: 100%;
-            border: 2px solid #d4a574;
-        }
-        .modal-title {
-            font-size: 1.5em;
-            color: #d4a574;
-            margin-bottom: 15px;
-        }
-        .modal-score {
-            font-size: 3em;
-            color: #ffd700;
-            margin: 10px 0;
-        }
-        .modal-stars {
-            font-size: 2em;
-            margin: 10px 0;
-        }
-        .modal-msg {
-            font-size: 1em;
-            color: #b8d4a8;
-            margin: 15px 0;
-        }
-        /* 解析面板 */
-        .explanation {
-            background: rgba(212,165,116,0.15);
-            border-left: 3px solid #d4a574;
-            padding: 12px 15px;
-            margin-top: 10px;
-            border-radius: 0 10px 10px 0;
-            font-size: 0.9em;
-            line-height: 1.6;
-            display: none;
-        }
-        .explanation.show { display: block; }
-        .next-btn {
-            margin-top: 15px;
-            background: #d4a574;
-            color: #1a3a1a;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 1em;
-            cursor: pointer;
-            display: none;
-        }
-        .next-btn.show { display: inline-block; }
-        /* 排行榜/统计 */
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            margin: 15px 0;
-        }
-        .stat-item {
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 1.5em;
-            color: #d4a574;
-            font-weight: bold;
-        }
-        .stat-label {
-            font-size: 0.75em;
-            color: #8fbc8f;
-        }
-        /* 生命值 */
-        .lives {
-            font-size: 1.3em;
-        }
-        /* 连击 */
-        .combo {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2em;
-            color: #ffd700;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            display: none;
-            z-index: 50;
-            animation: comboPop 0.8s ease-out;
-        }
-        @keyframes comboPop {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-        }
-        /* 返回按钮 */
-        .back-btn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: #f5f0e0;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-        .hint-btn {
-            background: rgba(255,215,0,0.2);
-            border: 1px solid #ffd700;
-            color: #ffd700;
-            padding: 6px 14px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 0.8em;
-            margin-top: 10px;
-        }
-        .hint-text {
-            display: none;
-            color: #ffd700;
-            font-size: 0.85em;
-            margin-top: 8px;
-            font-style: italic;
-        }
-        /* 滚动条 */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #d4a574; border-radius: 2px; }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <!-- 首页 -->
-        <div class="home-screen" id="homeScreen">
-            <div class="tree-icon">🌳</div>
-            <h1 class="title">种树郭橐驼传</h1>
-            <p class="subtitle">高中语文 · 课下注释闯关</p>
-            <p class="author">唐 · 柳宗元</p>
-            <div class="stats-bar">
-                <div class="stat-item">
-                    <div class="stat-value" id="totalStars">0</div>
-                    <div class="stat-label">总星数</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="completedLevels">0</div>
-                    <div class="stat-label">通关数</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="totalScore">0</div>
-                    <div class="stat-label">总积分</div>
-                </div>
-            </div>
-            <button class="btn btn-primary" onclick="showLevelSelect()">开始闯关</button>
-            <button class="btn btn-secondary" onclick="showRules()">游戏规则</button>
-        </div>
-
-        <!-- 关卡选择 -->
-        <div class="level-select" id="levelSelect">
-            <button class="back-btn" onclick="showHome()">← 返回</button>
-            <h2 style="text-align:center; color:#d4a574; margin-top:40px; margin-bottom:10px;">选择关卡</h2>
-            <p style="text-align:center; color:#8fbc8f; font-size:0.85em;">逐层深入，掌握郭橐驼的种树智慧</p>
-            <div class="level-grid" id="levelGrid"></div>
-        </div>
-
-        <!-- 游戏界面 -->
-        <div class="game-screen" id="gameScreen">
-            <button class="back-btn" onclick="confirmQuit()">← 退出</button>
-            <div class="top-bar">
-                <div class="progress-info">
-                    <span id="levelName">关卡1</span> · 第<span id="currentQ">1</span>/<span id="totalQ">10</span>题
-                </div>
-                <div class="lives" id="livesDisplay">❤️❤️❤️</div>
-            </div>
-            <div class="score-display" style="text-align:center; margin-bottom:10px;">
-                得分: <span id="currentScore">0</span>
-            </div>
-            <div class="question-box">
-                <span class="question-type" id="qType">字词解释</span>
-                <div class="question-text" id="questionText"></div>
-                <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 提示 (-20分)</button>
-                <div class="hint-text" id="hintText"></div>
-            </div>
-            <div class="options-container" id="optionsContainer"></div>
-            <div class="explanation" id="explanation"></div>
-            <div style="text-align:center;">
-                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一题 →</button>
-            </div>
-        </div>
-
-        <!-- 结果弹窗 -->
-        <div class="modal-overlay" id="resultModal">
-            <div class="modal">
-                <div class="modal-title" id="modalTitle">关卡完成!</div>
-                <div class="modal-score" id="modalScore">85</div>
-                <div class="modal-stars" id="modalStars">⭐⭐⭐</div>
-                <div class="modal-msg" id="modalMsg">不错!继续加油!</div>
-                <button class="btn btn-primary" onclick="backToLevels()" style="margin-top:15px;">返回关卡</button>
-                <button class="btn btn-secondary" onclick="retryLevel()" style="margin-top:10px;">重新挑战</button>
-            </div>
-        </div>
-
-        <!-- 规则弹窗 -->
-        <div class="modal-overlay" id="rulesModal">
-            <div class="modal" style="text-align:left;">
-                <div class="modal-title" style="text-align:center;">游戏规则</div>
-                <div style="line-height:2; font-size:0.95em;">
-                    <p>🌳 <b>种树郭橐驼传</b> 语文闯关游戏</p>
-                    <p>📚 共4个关卡，每关10题，难度递增</p>
-                    <p>❤️ 每关3条生命，答错扣1心</p>
-                    <p>⭐ 根据得分评星：90+三星，70+两星，50+一星</p>
-                    <p>💡 可使用提示，但会扣20分</p>
-                    <p>🔥 连续答对可获得连击加分</p>
-                    <p>🎯 通关后解锁下一关卡</p>
-                </div>
-                <button class="btn btn-primary" onclick="closeRules()" style="margin-top:15px;">知道了</button>
-            </div>
-        </div>
-
-        <!-- 连击动画 -->
-        <div class="combo" id="comboDisplay"></div>
-    </div>
-
-<script>
 // ===================== 游戏数据 =====================
 // 基于《种树郭橐驼传》课下注释设计
 const levels = [
@@ -433,7 +7,7 @@ const levels = [
         questions: [
             {
                 type: "字词解释",
-                question: ""郭橐驼"中"橐驼"是什么意思？",
+                question: "\"郭橐驼\"中\"橐驼\"是什么意思？",
                 options: ["骆驼", "驼背的人", "一种树", "地名"],
                 answer: 1,
                 explanation: "橐驼：骆驼。这里指郭橐驼是个驼背的人，因形似骆驼而得名。",
@@ -441,15 +15,15 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""病偻"中"偻"的意思是？",
+                question: "\"病偻\"中\"偻\"的意思是？",
                 options: ["懒惰", "脊背弯曲（驼背）", "疾病", "瘦弱"],
                 answer: 1,
                 explanation: "偻：脊背弯曲，即驼背。病偻：患了驼背病。",
-                hint: "与"佝偻病"的"偻"同义"
+                hint: "与\"佝偻病\"的\"偻\"同义"
             },
             {
                 type: "字词解释",
-                question: ""隆然伏行"中"隆然"的意思是？",
+                question: "\"隆然伏行\"中\"隆然\"的意思是？",
                 options: ["突然", "高耸的样子", "弯腰的样子", "缓慢"],
                 answer: 1,
                 explanation: "隆然：高耸的样子，这里形容脊背高起。伏行：弯着腰走路。",
@@ -457,47 +31,47 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""有类橐驼者"中"类"的意思是？",
+                question: "\"有类橐驼者\"中\"类\"的意思是？",
                 options: ["种类", "类似，像", "分类", "类别"],
                 answer: 1,
-                explanation: "类：类似，像。整句意为"有点像骆驼的样子"。",
-                hint: ""类似"的"类""
+                explanation: "类：类似，像。整句意为\"有点像骆驼的样子\"。",
+                hint: "\"类似\"的\"类\""
             },
             {
                 type: "字词解释",
-                question: ""故乡人号之"驼""中"号"的意思是？",
+                question: "\"故乡人号之\"驼\"\"中\"号\"的意思是？",
                 options: ["号召", "称呼，叫", "记号", "号码"],
                 answer: 1,
-                explanation: "号：称呼，叫做。这里用作动词，意为"叫他'驼'"。",
+                explanation: "号：称呼，叫做。这里用作动词，意为\"叫他'驼'\"。",
                 hint: "名词作动词用"
             },
             {
                 type: "字词解释",
-                question: ""甚善，名我固当"中"固"的意思是？",
+                question: "\"甚善，名我固当\"中\"固\"的意思是？",
                 options: ["坚固", "本来，确实", "固定", "固然"],
                 answer: 1,
                 explanation: "固：本来，确实。名我固当：这样称呼我确实恰当。",
-                hint: ""本来"的意思"
+                hint: "\"本来\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""因舍其名"中"舍"的意思是？",
+                question: "\"因舍其名\"中\"舍\"的意思是？",
                 options: ["房屋", "舍弃，放弃", "安排", "施舍"],
                 answer: 1,
                 explanation: "舍：舍弃，放弃。因舍其名：于是放弃了他原来的名字。",
-                hint: ""舍弃"的意思"
+                hint: "\"舍弃\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""亦自谓"橐驼"云"中"谓"的意思是？",
+                question: "\"亦自谓\"橐驼\"云\"中\"谓\"的意思是？",
                 options: ["说", "称呼，叫作", "认为", "告诉"],
                 answer: 1,
-                explanation: "谓：称呼，叫作。亦自谓"橐驼"云：也自称为"橐驼"。",
-                hint: ""称谓"的"谓""
+                explanation: "谓：称呼，叫作。亦自谓\"橐驼\"云：也自称为\"橐驼\"。",
+                hint: "\"称谓\"的\"谓\""
             },
             {
                 type: "字词解释",
-                question: ""其乡曰丰乐乡"中"其"指代的是？",
+                question: "\"其乡曰丰乐乡\"中\"其\"指代的是？",
                 options: ["郭橐驼", "长安", "柳树", "作者"],
                 answer: 0,
                 explanation: "其：他的，指郭橐驼的。其乡：他的家乡。",
@@ -505,7 +79,7 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""在长安西"中的"长安"是今天的哪里？",
+                question: "\"在长安西\"中的\"长安\"是今天的哪里？",
                 options: ["洛阳", "南京", "西安", "北京"],
                 answer: 2,
                 explanation: "长安：今陕西西安，唐朝都城。",
@@ -519,7 +93,7 @@ const levels = [
         questions: [
             {
                 type: "字词解释",
-                question: ""凡长安豪富人为观游及卖果者"中"观游"的意思是？",
+                question: "\"凡长安豪富人为观游及卖果者\"中\"观游\"的意思是？",
                 options: ["观看游览", "观赏游览的园林", "参观", "游玩"],
                 answer: 1,
                 explanation: "观游：指观赏游览的园林。这里指建造园林供人游览的富豪。",
@@ -527,23 +101,23 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""皆争迎取养"中"取养"的意思是？",
+                question: "\"皆争迎取养\"中\"取养\"的意思是？",
                 options: ["收养", "接来养活", "培养", "供养"],
                 answer: 1,
                 explanation: "取养：接来养活（他），指把郭橐驼接来供养，让他种树。",
-                hint: ""取"是接来的意思"
+                hint: "\"取\"是接来的意思"
             },
             {
                 type: "字词解释",
-                question: ""视驼所种树"中"视"的意思是？",
+                question: "\"视驼所种树\"中\"视\"的意思是？",
                 options: ["视力", "看，观察", "视力好", "看待"],
                 answer: 1,
                 explanation: "视：看，观察。视驼所种树：看郭橐驼种的树。",
-                hint: ""看见"的"视""
+                hint: "\"看见\"的\"视\""
             },
             {
                 type: "字词解释",
-                question: ""或移徙"中"移徙"的意思是？",
+                question: "\"或移徙\"中\"移徙\"的意思是？",
                 options: ["移动", "迁移，移植", "迁徙", "搬家"],
                 answer: 1,
                 explanation: "移徙：迁移，移植。指把树移植到别处。",
@@ -551,23 +125,23 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""无不活"前省略的主语是？",
+                question: "\"无不活\"前省略的主语是？",
                 options: ["郭橐驼", "树", "豪富人", "作者"],
                 answer: 1,
-                explanation: "省略的主语是"树"。（树）无不活：树没有不成活的。",
-                hint: "什么"无不活"？"
+                explanation: "省略的主语是\"树\"。（树）无不活：树没有不成活的。",
+                hint: "什么\"无不活\"？"
             },
             {
                 type: "字词解释",
-                question: ""且硕茂"中"硕茂"的意思是？",
+                question: "\"且硕茂\"中\"硕茂\"的意思是？",
                 options: ["硕果累累", "高大茂盛", "硕大", "茂盛"],
                 answer: 1,
                 explanation: "硕茂：高大茂盛。且：而且。且硕茂：而且高大茂盛。",
-                hint: ""硕"是大的意思，"茂"是茂盛"
+                hint: "\"硕\"是大的意思，\"茂\"是茂盛"
             },
             {
                 type: "字词解释",
-                question: ""早实以蕃"中"实"的词性和意思是？",
+                question: "\"早实以蕃\"中\"实\"的词性和意思是？",
                 options: ["名词，果实", "动词，结果实", "形容词，实在", "名词，事实"],
                 answer: 1,
                 explanation: "实：名词作动词，结果实。早实：早早结果实。蕃：多。",
@@ -575,23 +149,23 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""他植者虽窥伺效慕"中"窥伺"的意思是？",
+                question: "\"他植者虽窥伺效慕\"中\"窥伺\"的意思是？",
                 options: ["偷看", "暗中观察", "窥探", "观察"],
                 answer: 1,
                 explanation: "窥伺：暗中观察。效慕：仿效羡慕。指其他种树的人暗中观察仿效。",
-                hint: ""暗中观察"的意思"
+                hint: "\"暗中观察\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""莫能如也"中"如"的意思是？",
+                question: "\"莫能如也\"中\"如\"的意思是？",
                 options: ["如果", "比得上", "如同", "比如"],
                 answer: 1,
                 explanation: "如：比得上。莫能如也：没有能比得上他的。",
-                hint: ""不如"的"如""
+                hint: "\"不如\"的\"如\""
             },
             {
                 type: "理解题",
-                question: ""他植者虽窥伺效慕，莫能如也"说明什么？",
+                question: "\"他植者虽窥伺效慕，莫能如也\"说明什么？",
                 options: [
                     "其他种树的人不想学",
                     "郭橐驼种树技术高超，别人学不来",
@@ -600,7 +174,7 @@ const levels = [
                 ],
                 answer: 1,
                 explanation: "说明郭橐驼种树技艺高超，其他人虽然暗中观察仿效，但没有人能比得上他。",
-                hint: ""莫能如"是关键"
+                hint: "\"莫能如\"是关键"
             }
         ]
     },
@@ -610,7 +184,7 @@ const levels = [
         questions: [
             {
                 type: "字词解释",
-                question: ""有问之"中"之"指代的是？",
+                question: "\"有问之\"中\"之\"指代的是？",
                 options: ["种树的方法", "郭橐驼", "树", "问题"],
                 answer: 1,
                 explanation: "之：他，指代郭橐驼。有问之：有人问他（关于种树的事）。",
@@ -618,23 +192,23 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""对曰"中"对"的意思是？",
+                question: "\"对曰\"中\"对\"的意思是？",
                 options: ["对待", "回答", "对面", "正确"],
                 answer: 1,
                 explanation: "对：回答。对曰：回答说。古代对话常用语。",
-                hint: ""回答"的意思"
+                hint: "\"回答\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""橐驼非能使木寿且孳也"中"孳"的意思是？",
+                question: "\"橐驼非能使木寿且孳也\"中\"孳\"的意思是？",
                 options: ["滋生，繁殖", "子孙", "滋养", "繁殖"],
                 answer: 0,
                 explanation: "孳：滋生，繁殖。这里指树木生长繁衍。寿且孳：活得长久而且繁殖茂盛。",
-                hint: "与"滋生"同义"
+                hint: "与\"滋生\"同义"
             },
             {
                 type: "字词解释",
-                question: ""能顺木之天"中"天"的意思是？",
+                question: "\"能顺木之天\"中\"天\"的意思是？",
                 options: ["天空", "天性，自然规律", "天然", "天气"],
                 answer: 1,
                 explanation: "天：天性，自然规律。顺木之天：顺应树木生长的自然规律。",
@@ -642,15 +216,15 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""以致其性焉尔"中"致"的意思是？",
+                question: "\"以致其性焉尔\"中\"致\"的意思是？",
                 options: ["导致", "尽，充分发挥", "送达", "得到"],
                 answer: 1,
                 explanation: "致：尽，充分发挥。以致其性：来充分发挥它的天性。",
-                hint: ""尽"的意思"
+                hint: "\"尽\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""凡植木之性"中"性"的意思是？",
+                question: "\"凡植木之性\"中\"性\"的意思是？",
                 options: ["性格", "性质，特点", "本性", "性别"],
                 answer: 1,
                 explanation: "性：性质，特点。植木之性：种植树木的特点（规律）。",
@@ -658,7 +232,7 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""其本欲舒"中"本"的意思是？",
+                question: "\"其本欲舒\"中\"本\"的意思是？",
                 options: ["本来", "根本", "树根", "书本"],
                 answer: 2,
                 explanation: "本：树根。其本欲舒：它的树根要舒展。",
@@ -666,7 +240,7 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""其培欲平"中"培"的意思是？",
+                question: "\"其培欲平\"中\"培\"的意思是？",
                 options: ["培养", "培土", "培植", "培育"],
                 answer: 1,
                 explanation: "培：培土。其培欲平：它培的土要平整。",
@@ -674,15 +248,15 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""其土欲故"中"故"的意思是？",
+                question: "\"其土欲故\"中\"故\"的意思是？",
                 options: [ "故乡", "故意", "旧，原来的", "故事"],
                 answer: 2,
                 explanation: "故：旧，原来的。其土欲故：它用的土要是原来的旧土。",
-                hint: ""旧"的意思"
+                hint: "\"旧\"的意思"
             },
             {
                 type: "理解题",
-                question: ""其本欲舒，其培欲平，其土欲故，其筑欲密"这四句说明什么？",
+                question: "\"其本欲舒，其培欲平，其土欲故，其筑欲密\"这四句说明什么？",
                 options: [
                     "种树需要很多工具",
                     "种树要顺应树木生长的自然规律",
@@ -690,8 +264,8 @@ const levels = [
                     "种树要花很多钱"
                 ],
                 answer: 1,
-                explanation: "这四句从树根、培土、用土、捣土四个方面说明种树要顺应树木生长的自然规律，这是"顺木之天"的具体体现。",
-                hint: "与"顺木之天"相呼应"
+                explanation: "这四句从树根、培土、用土、捣土四个方面说明种树要顺应树木生长的自然规律，这是\"顺木之天\"的具体体现。",
+                hint: "与\"顺木之天\"相呼应"
             }
         ]
     },
@@ -701,7 +275,7 @@ const levels = [
         questions: [
             {
                 type: "字词解释",
-                question: ""既然已"中"既"的意思是？",
+                question: "\"既然已\"中\"既\"的意思是？",
                 options: ["既然", "已经", "……之后", "即使"],
                 answer: 2,
                 explanation: "既：……之后。既然已：这样做了以后。已：完毕，指种好树后。",
@@ -709,23 +283,23 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""勿动勿虑"中"虑"的意思是？",
+                question: "\"勿动勿虑\"中\"虑\"的意思是？",
                 options: ["考虑", "忧虑，担心", "思虑", "忧虑"],
                 answer: 1,
                 explanation: "虑：忧虑，担心。勿动勿虑：不要动它，不要担心它。",
-                hint: ""担忧"的意思"
+                hint: "\"担忧\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""去不复顾"中"顾"的意思是？",
+                question: "\"去不复顾\"中\"顾\"的意思是？",
                 options: ["照顾", "回头看", "顾客", "顾及"],
                 answer: 1,
                 explanation: "顾：回头看。去不复顾：离开不再回头看。",
-                hint: ""环顾"的"顾""
+                hint: "\"环顾\"的\"顾\""
             },
             {
                 type: "字词解释",
-                question: ""其莳也若子"中"莳"的意思是？",
+                question: "\"其莳也若子\"中\"莳\"的意思是？",
                 options: ["种植", "时间", "侍奉", "栽培"],
                 answer: 0,
                 explanation: "莳：种植，移植。其莳也若子：栽种时像对待子女一样细心。",
@@ -733,31 +307,31 @@ const levels = [
             },
             {
                 type: "字词解释",
-                question: ""其置也若弃"中"置"的意思是？",
+                question: "\"其置也若弃\"中\"置\"的意思是？",
                 options: ["放置", "搁置，放下", "位置", "设置"],
                 answer: 1,
                 explanation: "置：搁置，放下。其置也若弃：种好后放下它像抛弃了一样（不再多管）。",
-                hint: ""放置不管"的意思"
+                hint: "\"放置不管\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""则其天者全而其性得矣"中"全"的意思是？",
+                question: "\"则其天者全而其性得矣\"中\"全\"的意思是？",
                 options: ["完整", "保全", "完全", "全部"],
                 answer: 1,
                 explanation: "全：保全。其天者全：树木的自然天性得以保全。",
-                hint: ""保全"的意思"
+                hint: "\"保全\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""他植者则不然"中"然"的意思是？",
+                question: "\"他植者则不然\"中\"然\"的意思是？",
                 options: ["然而", "这样", "然后", "燃烧"],
                 answer: 1,
                 explanation: "然：这样。他植者则不然：其他种树的人却不这样。",
-                hint: ""这样"的意思"
+                hint: "\"这样\"的意思"
             },
             {
                 type: "字词解释",
-                question: ""根拳而土易"中"拳"的意思是？",
+                question: "\"根拳而土易\"中\"拳\"的意思是？",
                 options: ["拳头", "拳曲，弯曲", "握拳", "拳击"],
                 answer: 1,
                 explanation: "拳：拳曲，弯曲。根拳：树根拳曲不舒展。",
@@ -765,7 +339,7 @@ const levels = [
             },
             {
                 type: "理解题",
-                question: ""其莳也若子，其置也若弃"体现了郭橐驼怎样的种树理念？",
+                question: "\"其莳也若子，其置也若弃\"体现了郭橐驼怎样的种树理念？",
                 options: [
                     "种树时要细心，种好后要放手不管",
                     "种树前后都要精心照顾",
@@ -773,8 +347,8 @@ const levels = [
                     "种树时要像对孩子一样严厉"
                 ],
                 answer: 0,
-                explanation: ""莳也若子"指栽种时像对待子女一样细心；"置也若弃"指种好后要像抛弃一样不再过多干预。这体现了"顺应自然"的理念。",
-                hint: ""若子"与"若弃"的对比"
+                explanation: "\"莳也若子\"指栽种时像对待子女一样细心；\"置也若弃\"指种好后要像抛弃一样不再过多干预。这体现了\"顺应自然\"的理念。",
+                hint: "\"若子\"与\"若弃\"的对比"
             },
             {
                 type: "理解题",
@@ -786,7 +360,7 @@ const levels = [
                     "种树比做官更重要"
                 ],
                 answer: 1,
-                explanation: "本文是寓言体散文，借郭橐驼种树"顺木之天"的道理，类比治理百姓也应顺应自然规律，不要政令烦苛、扰民过甚，体现了柳宗元的民本思想。",
+                explanation: "本文是寓言体散文，借郭橐驼种树\"顺木之天\"的道理，类比治理百姓也应顺应自然规律，不要政令烦苛、扰民过甚，体现了柳宗元的民本思想。",
                 hint: "这是文章的主旨"
             }
         ]
@@ -841,7 +415,7 @@ function renderLevelGrid() {
             <div class="level-stars">${gameState.unlockedLevels[i] ? stars : '🔒'}</div>
         `;
         if (gameState.unlockedLevels[i]) {
-            card.onclick = () => startLevel(i);
+            card.addEventListener('click', () => startLevel(i));
         }
         grid.appendChild(card);
     }
@@ -909,7 +483,7 @@ function loadQuestion() {
         const btn = document.createElement('div');
         btn.className = 'option';
         btn.textContent = labels[idx] + '. ' + opt;
-        btn.onclick = () => selectAnswer(idx);
+        btn.addEventListener('click', () => selectAnswer(idx));
         optionsContainer.appendChild(btn);
     });
 }
@@ -1010,7 +584,6 @@ function showResult(completed) {
         const messages = ['继续加油!', '干得漂亮!', '太厉害了!', '完美通关!'];
         msgEl.textContent = messages[stars] || '不错!';
 
-        // 保存成绩
         if (gameState.score > gameState.levelScores[gameState.currentLevel]) {
             gameState.levelScores[gameState.currentLevel] = gameState.score;
         }
@@ -1018,7 +591,6 @@ function showResult(completed) {
             gameState.levelStars[gameState.currentLevel] = stars;
         }
 
-        // 解锁下一关
         if (gameState.currentLevel < 3 && stars > 0) {
             gameState.unlockedLevels[gameState.currentLevel + 1] = true;
         }
@@ -1046,8 +618,30 @@ function confirmQuit() {
     }
 }
 
+// 绑定所有按钮事件（移除内联onclick）
+function bindEvents() {
+    // 首页按钮
+    document.querySelector('.btn-primary').addEventListener('click', showLevelSelect);
+    document.querySelector('.btn-secondary').addEventListener('click', showRules);
+    
+    // 返回按钮
+    document.querySelectorAll('.back-btn')[0].addEventListener('click', showHome);
+    document.querySelectorAll('.back-btn')[1].addEventListener('click', confirmQuit);
+    
+    // 规则关闭
+    document.querySelector('#rulesModal .btn-primary').addEventListener('click', closeRules);
+    
+    // 结果弹窗
+    document.querySelectorAll('#resultModal .btn-primary')[0].addEventListener('click', backToLevels);
+    document.querySelectorAll('#resultModal .btn-secondary')[0].addEventListener('click', retryLevel);
+    
+    // 提示按钮
+    document.getElementById('hintBtn').addEventListener('click', showHint);
+    
+    // 下一题按钮
+    document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+}
+
 // 初始化
+bindEvents();
 showHome();
-</script>
-</body>
-</html>
