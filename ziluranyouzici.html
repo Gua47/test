@@ -758,29 +758,56 @@
                 remainingEl.textContent = totalPairs - matchedPairs;
                 scoreEl.textContent = score;
                 
-                // 添加高亮动画
+                // 高亮动画
                 selectedWord.element.classList.add('highlight');
                 selectedMeaning.classList.add('highlight');
                 
-                // 检查游戏是否完成
+                // 游戏完成判断
                 if (matchedPairs === totalPairs) {
                     clearInterval(timerInterval);
                     completionMessage.style.display = "block";
-                    // 额外加分
                     score += 50;
                     scoreEl.textContent = score;
                 }
-                
-                // 重置选择
+
+                // ---------- 核心：消除 + 整体上移 ----------
+                const wordWrap = document.getElementById("wordContainer");
+                const meanWrap = document.getElementById("meaningContainer");
+
+                // 给容器开启平滑过渡，整体会上移
+                wordWrap.style.transition = "all 0.5s ease";
+                meanWrap.style.transition = "all 0.5s ease";
+
+                // 成功方块收缩消失
+                [selectedWord.element, selectedMeaning].forEach(el => {
+                    el.style.transition = "all 0.5s ease";
+                    el.style.opacity = "0";
+                    el.style.transform = "scale(0.8)";
+                    el.style.height = "0";
+                    el.style.margin = "0";
+                    el.style.padding = "0";
+                    el.style.overflow = "hidden";
+                });
+
+                // 自动挤压、上移，填补空位
+                setTimeout(() => {
+                    wordWrap.style.height = "auto";
+                    meanWrap.style.height = "auto";
+                }, 100);
+                // ----------------------------------------
+
                 selectedWord = null;
                 selectedMeaning = null;
-                
-                // 移除高亮动画
+
+                // 移除高亮
                 setTimeout(() => {
-                    const highlighted = document.querySelectorAll('.highlight');
-                    highlighted.forEach(el => el.classList.remove('highlight'));
+                    document.querySelectorAll('.highlight').forEach(el => {
+                        el.classList.remove('highlight');
+                    });
                 }, 1500);
+
             }, 300);
+
         } else {
             // 匹配失败
             setTimeout(() => {
@@ -790,60 +817,8 @@
                 selectedMeaning = null;
             }, 500);
         }
-    } // <-- 这里是修复的关键：补上了缺失的括号！
-
-    // ====================== 自动上移/自动清理模块（新增功能） ======================
-    setTimeout(() => {
-        const allWords = document.querySelectorAll('.word-item');
-        const allMeans = document.querySelectorAll('.meaning-item');
-
-        let hasEmpty = false;
-
-        // 遍历所有词语方块，检查是否已经配对成功
-        allWords.forEach(item => {
-            if (item.classList.contains('matched')) {
-                item.style.opacity = '0';
-                item.style.height = '0';
-                item.style.margin = '0';
-                item.style.padding = '0';
-                item.style.overflow = 'hidden';
-                item.style.transition = 'all 0.5s ease';
-                hasEmpty = true;
-            }
-        });
-
-        // 遍历所有解释方块，检查是否已经配对成功
-        allMeans.forEach(item => {
-            if (item.classList.contains('matched')) {
-                item.style.opacity = '0';
-                item.style.height = '0';
-                item.style.margin = '0';
-                item.style.padding = '0';
-                item.style.overflow = 'hidden';
-                item.style.transition = 'all 0.5s ease';
-                hasEmpty = true;
-            }
-        });
-
-        // 只要有消除，就触发整体上移动画
-        if (hasEmpty) {
-            const wordContainer = document.getElementById('wordContainer');
-            const meaningContainer = document.getElementById('meaningContainer');
-            wordContainer.style.transition = 'all 0.6s ease';
-            meaningContainer.style.transition = 'all 0.6s ease';
-        }
-
-        // 检查是否全部完成
-        const totalItems = document.querySelectorAll('.word-item, .meaning-item').length;
-        const matchedItems = document.querySelectorAll('.matched').length;
-        if (totalItems === matchedItems && matchedItems > 0) {
-            setTimeout(() => {
-                alert('恭喜你！全部配对成功！');
-            }, 600);
-        }
-    }, 300);
-    // ==========================================================================
-}  
+    }
+}
         // 更新计时器
         function updateTimer() {
             const now = new Date();
