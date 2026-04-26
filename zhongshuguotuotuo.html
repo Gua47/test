@@ -1,1 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>郭橐驼传·文言字词PK赛</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
+        body{
+            background:#f8f9fa;
+            padding:0 !important;
+            margin:0 !important;
+            width:100vw;
+            height:100vh;
+            overflow:hidden;
+        }
+        .landscape-tip{
+            display:none;
+            text-align:center;
+            font-size:14px;
+            color:#dc3545;
+            padding:6px;
+            font-weight:bold;
+        }
+        @media screen and (orientation:portrait) and (max-width:768px) {
+            .landscape-tip{display:block;}
+            .main-content{display:none !important;}
+        }
 
+        .page{display:none;}
+        .active{display:block;}
+
+        .title{
+            text-align:center;
+            font-size:16px;
+            margin:2px 0;
+            background:linear-gradient(90deg,#0d6efd,#d63384);
+            -webkit-background-clip:text;color:transparent;
+        }
+
+        .team-select{text-align:center;margin:4px 0;}
+        .team-btn{
+            padding:4px 6px;margin:2px;border:none;
+            background:linear-gradient(135deg,#0d6efd,#0a58ca);
+            color:white;border-radius:20px; /* 椭圆按钮 */
+            font-size:12px;
+        }
+        .team-btn.active{background:linear-gradient(135deg,#d63384,#a10c5a);}
+
+        .name-input{
+            display:block;margin:4px auto;padding:4px;
+            width:140px;font-size:12px;text-align:center;
+            border:1px solid #0d6efd;border-radius:20px; /* 椭圆输入框 */
+        }
+
+        .start-btn{
+            display:block;margin:6px auto;
+            padding:6px 16px;font-size:12px;
+            background:linear-gradient(135deg,#d63384,#a10c5a);
+            color:white;border:none;border-radius:20px; /* 椭圆按钮 */
+        }
+
+        .pre-content{
+            background:white;padding:6px;border-radius:10px;
+            margin:2px auto;max-height:160px;overflow-y:scroll;
+            line-height:1.3;font-size:11px;
+            width:98%;
+        }
+
+        .countdown{
+            text-align:center;font-size:28px;font-weight:bold;
+            color:#dc3545;margin:2px 0;
+            animation:pulse 1s infinite alternate;
+        }
+        @keyframes pulse{from{transform:scale(1);}to{transform:scale(1.1);}}
+
+        .status{
+            display:flex;justify-content:space-around;
+            margin:1px 0;font-weight:bold;
+            background:white;padding:2px;border-radius:10px;
+            font-size:11px;
+            flex-wrap:wrap;
+        }
+
+        /* ========== 全屏椭圆卡片区域 ========== */
+        .cards-container{
+            display:flex;
+            width:100vw;
+            height:calc(100vh - 70px);
+            margin:0;
+            padding:0;
+            gap:1px;
+        }
+        .word-col, .mean-col{
+            width:50%;
+            height:100%;
+            display:flex;
+            flex-wrap:wrap;
+            align-content:flex-start;
+            gap:2px 4px; /* 椭圆卡片间距优化 */
+            background:white;
+            padding:2px;
+            border:none;
+            overflow-y:auto;
+        }
+
+        /* 核心：椭圆卡片（完全匹配参考图） */
+        .card{
+            width:auto; /* 自适应宽度，消除空白 */
+            min-width:60px;
+            height:32px;
+            line-height:32px;
+            text-align:center;
+            border-radius:50px; /* 椭圆圆角（关键） */
+            user-select:none;
+            transition:all 0.2s ease;
+            font-size:9px;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            padding:0 8px; /* 左右内边距，上下无空白 */
+            margin:1px 2px;
+        }
+        .word-col .card{
+            background:#f86b88; /* 参考图红色系 */
+            color:white;
+            border:none; /* 去掉边框，减少空白 */
+            box-shadow:0 1px 2px rgba(214, 51, 132, 0.2);
+        }
+        .mean-col .card{
+            background:#4fc3f7; /* 参考图青蓝色系 */
+            color:white;
+            border:none; /* 去掉边框，减少空白 */
+            box-shadow:0 1px 2px rgba(13, 110, 253, 0.2);
+        }
+
+        .card.hidden{display:none !important;}
+        .card.clickable{cursor:pointer;}
+        /* 高亮选中 + 放大提示 */
+        .card.active{
+            transform:scale(1.2);
+            box-shadow:0 0 15px rgba(255, 235, 59, 0.8);
+            background:#ffeb3b !important;
+            color:#000 !important;
+            font-weight:bold;
+            z-index:999;
+        }
+        .card.wrong{
+            background:#ff3d3d !important;
+            animation:shake 0.4s;
+        }
+        @keyframes shake{
+            0%{transform:translateX(0);}25%{transform:translateX(-2px);}
+            50%{transform:translateX(2px);}100%{transform:translateX(0);}
+        }
+
+        .rank-box{
+            background:white;padding:6px;border-radius:10px;margin:4px auto;
+            width:98%;
+        }
+        .rank-item{
+            padding:4px;margin:2px 0;border-radius:20px; /* 椭圆排名项 */
+            font-size:12px;font-weight:bold;
+        }
+        .rank1{background:#ffc107;}
+        .rank2{background:#6c757d;color:white;}
+        .rank3{background:#fd7e14;color:white;}
+
+        .wrong-box{
+            background:#fff0f3;padding:6px;border-radius:10px;margin:4px auto;
+            border:2px solid #ff4c60;
+            width:98%;
+        }
+        .wrong-item{
+            padding:4px 8px;margin:2px 0;
+            background:#ffeef1;color:#d13444;
+            font-size:11px;
+            border-radius:20px; /* 椭圆错题项 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="landscape-tip">📱 请横屏使用，做题更快！</div>
+<div class="main-content">
+
+<div class="page active" id="page1">
+    <h2 class="title">📜《郭橐驼传》文言字词PK赛</h2>
+    <div class="team-select" id="teamBtns"></div>
+    <input class="name-input" id="userName" placeholder="输入名字">
+    <button class="start-btn" onclick="toPrepare()">开始游戏</button>
+</div>
+
+<div class="page" id="page2">
+    <h2 class="title">📖 60秒预习</h2>
+    <div class="pre-content" id="preList"></div>
+    <div class="countdown" id="cd60">60</div>
+</div>
+
+<div class="page" id="page3">
+    <h2 class="title">🎯 开始答题</h2>
+    <div class="status">
+        <div>小组：<span id="showTeam"></span></div>
+        <div>姓名：<span id="showName"></span></div>
+        <div>时间：<span id="time300">300</span>s</div>
+        <div>得分：<span id="score">0</span></div>
+    </div>
+
+    <div class="cards-container">
+        <div class="word-col" id="leftCol"></div>
+        <div class="mean-col" id="rightCol"></div>
+    </div>
+</div>
+
+<div class="page" id="page4">
+    <h2 class="title">🏆 比赛结束</h2>
+    <h3 style="text-align:center;font-size:14px;">🥇小组排名</h3><div class="rank-box" id="teamRank"></div>
+    <h3 style="text-align:center;font-size:14px;">👤个人排名</h3><div class="rank-box" id="userRank"></div>
+    <h3 style="text-align:center;color:red;font-size:14px;">❌错题整理</h3><div class="wrong-box" id="wrongList"></div>
+</div>
+
+</div>
+
+<script>
+const teams = ["超级飞侠组","待测电组","假期梦女","使莱克七怪","虎头帮","心满意组","弥乐佛组","未知组"];
+const questions = [
+    ["橐","口袋，此处指骆驼"],["隆","高，隆起"],["因","于是，就"],["号","称呼，取名"],
+    ["固","本来，确实"],["陋","简陋，见识浅陋"],["术","方法，技艺"],["致","求得，得到"],
+    ["硕","硕大，高大"],["茂","茂盛"],["实","结果实，果实"],["蕃","多，繁多"],
+    ["寿","活得长久"],["孳","滋长、繁殖"],["莳","栽种，移植"],["木","树木，苗木"],
+    ["本","树根；根本"],["舒","舒展"],["土","泥土，土壤"],["故","旧的，原来的"],
+    ["筑","捣土，夯实"],["密","紧实，细密"],["抑","按压，压抑"],["顺","顺应，顺从"],
+    ["性","本性，天性"],["焉","语气助词，句末"],["去","离开，舍弃"],["顾","回头看，照看"],
+    ["日","每天，日日"],["勤","辛劳，频繁操劳"],["忧","担忧，忧虑"],["弱","柔弱，弱小"],
+    ["长","生长，成长"],["耗","损耗，损伤"],["怠","懈怠，松懈"],["及","等到，及至"],
+    ["卒","最终，终究"],["虽","即使，虽然"],["善","擅长，善于"],["问","询问，请教"],
+    ["理","治理，管理"],["吏","官吏，官员"],["令","政令，命令"],["促","催促"],
+    ["督","督促，监督"],["缘","沿着，依照"],["病","困苦，弊病"],["暇","空闲，闲暇"],
+    ["戒","告诫，警戒"],["名","名作动：取名、称呼"],["旦","名作状：在早上"],
+    ["暮","名作状：在傍晚"],["硕茂","使动：使…高大茂盛"],["蕃","使动：使…结果繁多"],
+    ["全","形作动：保全，保持完整"],["穷","形作动：穷尽、深究"],["生","动作名：生计、生活"],
+    ["子","名作动：抚育、爱护"]
+];
+
+let teamIndex=-1,userName="",time=300,timer,score=0,select=[];
+let teamScores=Array(8).fill(0),userList=[],wrongList=[];
+
+// 渲染小组
+function renderHome(){
+    let t=document.getElementById("teamBtns");
+    teams.forEach((s,i)=>{
+        t.innerHTML+=`<button class="team-btn" onclick="selectTeam(${i})">${s}</button>`;
+    });
+}
+function selectTeam(i){
+    teamIndex=i;
+    document.querySelectorAll(".team-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".team-btn")[i].classList.add("active");
+}
+
+// 预习
+function toPrepare(){
+    userName=document.getElementById("userName").value.trim();
+    if(teamIndex==-1||!userName){alert("请选小组+填名字");return;}
+    let pre=document.getElementById("preList");pre.innerHTML="";
+    questions.forEach(q=>pre.innerHTML+=q[0]+" → "+q[1]+"<br>");
+    wrongList=[];show("page2");start60();
+}
+function start60(){
+    let t=60;let cd=setInterval(()=>{
+        t--;document.getElementById("cd60").innerText=t;
+        if(t<=0){clearInterval(cd);toGame();}
+    },1000);
+}
+
+// 游戏
+function toGame(){
+    show("page3");
+    document.getElementById("showTeam").innerText=teams[teamIndex];
+    document.getElementById("showName").innerText=userName;
+    initCards();start300();
+}
+function start300(){
+    timer=setInterval(()=>{
+        time--;document.getElementById("time300").innerText=time;
+        if(time<=0){clearInterval(timer);endGame();}
+    },1000);
+}
+
+// 核心：椭圆卡片 + 自动乱序 + 自动隐藏
+function initCards(){
+    let L=document.getElementById("leftCol"),R=document.getElementById("rightCol");
+    L.innerHTML="";R.innerHTML="";
+    // 左侧字词（椭圆卡片）
+    questions.forEach(q=>{
+        L.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[0]}</div>`;
+    });
+    // 右侧释义 随机乱序（椭圆卡片）
+    let rand=[...questions].sort(()=>Math.random()-0.5);
+    rand.forEach(q=>{
+        R.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[1]}</div>`;
+    });
+    bindClick();
+}
+
+// 点击
+function bindClick(){
+    document.querySelectorAll(".card.clickable").forEach(c=>{
+        c.onclick=function(){
+            if(time<=0||this.classList.contains("hidden")||this.classList.contains("active")) return;
+            if(select.length>=2)return;
+            this.classList.add("active");
+            select.push(this);
+            if(select.length===2) check();
+        }
+    });
+}
+
+// 判题 + 自动隐藏已答对卡片（提速核心）
+function check(){
+    let a=select[0],b=select[1];
+    let ok=a.dataset.k===b.dataset.k;
+
+    if(!ok){
+        let w=a.dataset.k;
+        if(!wrongList.includes(w)) wrongList.push(w);
+    }
+
+    setTimeout(()=>{
+        a.classList.remove("active");b.classList.remove("active");
+        if(ok){
+            score+=10;teamScores[teamIndex]+=10;
+            a.classList.add("hidden");
+            b.classList.add("hidden");
+        }else{
+            a.classList.add("wrong");b.classList.add("wrong");
+            setTimeout(()=>{a.classList.remove("wrong");b.classList.remove("wrong");},300);
+        }
+        document.getElementById("score").innerText=score;
+        select=[];
+    },200);
+}
+
+// 结束
+function endGame(){
+    userList.push({name:userName,score:score});
+    show("page4");showRank();showWrong();
+}
+function showRank(){
+    let teamHtml="",userHtml="";
+    teams.forEach((n,i)=>teamHtml+=`<div class="rank-item">${n}：${teamScores[i]}分</div>`);
+    userList.sort((a,b)=>b.score-a.score).forEach((u,i)=>{
+        userHtml+=`<div class="rank-item">第${i+1}名：${u.name}（${u.score}分）</div>`;
+    });
+    document.getElementById("teamRank").innerHTML=teamHtml;
+    document.getElementById("userRank").innerHTML=userHtml;
+}
+function showWrong(){
+    let html="";
+    if(wrongList.length===0) html=`<div style="color:green;text-align:center;">✅ 全对！</div>`;
+    else wrongList.forEach(w=>{
+        let ans=questions.find(q=>q[0]==w);
+        html+=`<div class="wrong-item">${w} → ${ans[1]}</div>`;
+    });
+    document.getElementById("wrongList").innerHTML=html;
+}
+
+function show(id){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+renderHome();
+</script>
+</body>
+</html>
