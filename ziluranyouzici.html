@@ -770,15 +770,15 @@
                     scoreEl.textContent = score;
                 }
 
-                // ---------- 核心：消除 + 整体上移 ----------
+                // ========== 【核心修复】消除 + 整体上移 ==========
                 const wordWrap = document.getElementById("wordContainer");
                 const meanWrap = document.getElementById("meaningContainer");
 
-                // 给容器开启平滑过渡，整体会上移
-                wordWrap.style.transition = "all 0.5s ease";
-                meanWrap.style.transition = "all 0.5s ease";
+                // 1. 给容器开启平滑过渡
+                wordWrap.style.transition = "height 0.5s ease, padding 0.5s ease";
+                meanWrap.style.transition = "height 0.5s ease, padding 0.5s ease";
 
-                // 成功方块收缩消失
+                // 2. 成功方块平滑收缩消失
                 [selectedWord.element, selectedMeaning].forEach(el => {
                     el.style.transition = "all 0.5s ease";
                     el.style.opacity = "0";
@@ -789,12 +789,19 @@
                     el.style.overflow = "hidden";
                 });
 
-                // 自动挤压、上移，填补空位
+                // 3. 强制触发容器重排，实现整体上移
                 setTimeout(() => {
+                    // 临时修改高度，触发浏览器重新计算布局
                     wordWrap.style.height = "auto";
                     meanWrap.style.height = "auto";
+                    
+                    // 再强制设置一次，确保收缩生效
+                    const newWordHeight = wordWrap.scrollHeight;
+                    const newMeanHeight = meanWrap.scrollHeight;
+                    wordWrap.style.height = `${newWordHeight}px`;
+                    meanWrap.style.height = `${newMeanHeight}px`;
                 }, 100);
-                // ----------------------------------------
+                // =================================================
 
                 selectedWord = null;
                 selectedMeaning = null;
