@@ -188,20 +188,20 @@
         }
         
         .word-item, .meaning-item {
-            padding: 14px 18px;
+            padding: 10px 14px;
             text-align: center;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1.15rem;
+            font-size: 0.95rem;
             user-select: none;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 80px;
+            min-width: 70px;
             max-width: 100%;
             word-break: break-word;
             line-height: 1.4;
@@ -214,9 +214,9 @@
         }
         
         .meaning-item {
-            background: linear-gradient(to right, #c9b99b, #d6c7ae);
+            background: linear-gradient(to right, #7cb342, #5d8c22);
             color: #3a2618;
-            border: 1px solid #b8a992;
+            border: 1px solid #5d8c22;
         }
         
         .word-item:active, .meaning-item:active {
@@ -226,8 +226,8 @@
         /* 修改选中颜色 - 字词选中为草绿色 */
         .word-item.selected {
             background: linear-gradient(to right, #7cb342, #5d8c22);
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(124, 179, 66, 0.4);
+            transform: scale(1.03);
+            box-shadow: 0 0 8px rgba(124, 179, 66, 0.25);
             color: #fff;
             border: 1px solid #5d8c22;
         }
