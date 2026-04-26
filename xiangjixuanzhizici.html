@@ -1,1 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>项脊轩志·文言字词PK赛</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
+        body{
+            background:#f8f9fa;
+            padding:10px;
+            min-height:100vh;
+            /* 强制横屏适配 */
+            display:flex;
+            flex-direction:column;
+        }
+        /* 横屏提示 */
+        .landscape-tip{
+            display:none;
+            text-align:center;
+            font-size:18px;
+            color:#dc3545;
+            padding:20px;
+            font-weight:bold;
+        }
+        @media screen and (orientation:portrait) and (max-width:768px) {
+            .landscape-tip{display:block;}
+            .main-content{display:none !important;}
+        }
 
+        .page{display:none;}
+        .active{display:block;}
+
+        .title{
+            text-align:center;font-size:24px;margin:15px 0;
+            background:linear-gradient(90deg,#0d6efd,#d63384);
+            -webkit-background-clip:text;color:transparent;
+        }
+
+        .team-select{text-align:center;margin:20px 0;}
+        .team-btn{
+            padding:8px 12px;margin:4px;border:none;
+            background:linear-gradient(135deg,#0d6efd,#0a58ca);
+            color:white;border-radius:6px;
+            transition:0.3s;
+            font-size:14px;
+        }
+        .team-btn.active{background:linear-gradient(135deg,#d63384,#a10c5a);}
+        .team-btn:hover{transform:scale(1.05);}
+
+        .name-input{
+            display:block;margin:15px auto;padding:10px;
+            width:200px;font-size:14px;text-align:center;
+            border:2px solid #0d6efd;border-radius:6px;
+        }
+
+        .start-btn{
+            display:block;margin:20px auto;
+            padding:12px 30px;font-size:16px;
+            background:linear-gradient(135deg,#d63384,#a10c5a);
+            color:white;border:none;border-radius:8px;
+            transition:0.3s;
+        }
+        .start-btn:hover{transform:scale(1.1);}
+
+        .pre-content{
+            background:white;padding:15px;border-radius:8px;
+            margin:10px auto;max-height:200px;overflow-y:scroll;
+            line-height:1.6;font-size:14px;
+            box-shadow:0 3px 10px rgba(0,0,0,0.1);
+            width:90%;
+        }
+
+        .countdown{
+            text-align:center;font-size:50px;font-weight:bold;
+            color:#dc3545;margin:10px 0;
+            animation:pulse 1s infinite alternate;
+        }
+        @keyframes pulse{from{transform:scale(1);}to{transform:scale(1.1);}}
+
+        .tip{text-align:center;font-size:16px;margin:8px 0;}
+        .status{
+            display:flex;justify-content:space-around;
+            margin:10px 0;font-weight:bold;
+            background:white;padding:8px;border-radius:8px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            font-size:14px;
+            flex-wrap:wrap;
+        }
+
+        /* 核心修改：左右分栏密集排版 */
+        .cards-container{
+            display:flex;
+            justify-content:space-between;
+            width:98%;
+            margin:10px auto;
+            gap:10px;
+            height:calc(100vh - 180px);
+        }
+        .word-col, .mean-col{
+            width:48%;
+            display:flex;
+            flex-wrap:wrap;
+            align-content:flex-start;
+            gap:5px;
+            background:white;
+            padding:10px;
+            border-radius:8px;
+            box-shadow:0 3px 10px rgba(0,0,0,0.1);
+            overflow-y:auto;
+        }
+
+        /* 密集卡片样式 */
+        .card{
+            width:calc(33% - 4px);
+            min-width:80px;
+            height:50px;
+            line-height:50px;
+            text-align:center;
+            border-radius:6px;
+            user-select:none;
+            transition:all 0.2s ease;
+            font-size:12px;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            padding:0 5px;
+        }
+        /* 左侧字词卡片 */
+        .word-col .card{
+            background:#f86b88;
+            color:white;
+            border:1px solid #d63384;
+        }
+        /* 右侧释义卡片 */
+        .mean-col .card{
+            background:#4fc3f7;
+            color:white;
+            border:1px solid #0d6efd;
+        }
+
+        .card.hidden{
+            display:none;
+        }
+        .card.clickable{cursor:pointer;}
+        .card.active{
+            transform:scale(1.08);
+            box-shadow:0 0 15px rgba(0,100,255,0.7);
+            border-color:white !important;
+        }
+        .card.wrong{
+            background:#ff6b6b !important;
+            transform:scale(1.05);
+            animation:shake 0.4s;
+        }
+        @keyframes shake{
+            0%{transform:translateX(0);}25%{transform:translateX(-3px);}
+            50%{transform:translateX(3px);}75%{transform:translateX(-2px);}100%{transform:translateX(0);}
+        }
+
+        .rank-box{
+            background:white;padding:15px;border-radius:8px;margin:10px auto;
+            box-shadow:0 3px 10px rgba(0,0,0,0.1);
+            width:90%;
+        }
+        .rank-item{
+            padding:8px;margin:5px 0;border-radius:6px;
+            font-size:14px;font-weight:bold;
+        }
+        .rank1{background:#ffc107;color:#222;}
+        .rank2{background:#6c757d;color:white;}
+        .rank3{background:#fd7e14;color:white;}
+        .rank-normal{background:#e9ecef;color:#222;}
+
+        .wrong-box{
+            background:#fff0f3;padding:15px;border-radius:8px;margin:10px auto;
+            box-shadow:0 3px 10px rgba(255,76,96,0.1);
+            border:2px solid #ff4c60;
+            width:90%;
+        }
+        .wrong-item{
+            padding:8px;margin:4px 0;
+            background:#ffeef1;border-radius:4px;
+            font-size:14px;
+            color:#d13444;
+        }
+    </style>
+</head>
+<body>
+    <!-- 横屏提示 -->
+    <div class="landscape-tip">📱 请将手机横屏使用，体验更佳！</div>
+    
+    <div class="main-content">
+        <div class="page active" id="page1">
+            <h2 class="title">📜《项脊轩志》文言字词PK赛</h2>
+            <div class="team-select" id="teamBtns"></div>
+            <input class="name-input" id="userName" placeholder="请输入你的名字">
+            <button class="start-btn" onclick="toPrepare()">游戏开始</button>
+        </div>
+
+        <div class="page" id="page2">
+            <h2 class="title">📖 60秒快速预习</h2>
+            <div class="pre-content" id="preList"></div>
+            <div class="countdown" id="cd60">60</div>
+            <div class="tip">时间结束自动进入游戏</div>
+        </div>
+
+        <div class="page" id="page3">
+            <h2 class="title">🎯 开始PK！</h2>
+            <div class="status">
+                <div>小组：<span id="showTeam"></span></div>
+                <div>姓名：<span id="showName"></span></div>
+                <div>⏱时间：<span id="time300">300</span>s</div>
+                <div>得分：<span id="score">0</span></div>
+            </div>
+            <!-- 核心修改：左右分栏容器 -->
+            <div class="cards-container">
+                <div class="word-col" id="leftCol"></div>
+                <div class="mean-col" id="rightCol"></div>
+            </div>
+        </div>
+
+        <div class="page" id="page4">
+            <h2 class="title">🏆 比赛结束</h2>
+            <h3 style="text-align:center;margin:8px 0;font-size:18px;">🥇 小组总排名</h3>
+            <div class="rank-box" id="teamRank"></div>
+
+            <h3 style="text-align:center;margin:15px 0 8px 0;font-size:18px;">👤 个人得分排名</h3>
+            <div class="rank-box" id="userRank"></div>
+
+            <h3 style="text-align:center;margin:15px 0 8px 0; color:#dc3545;font-size:18px;">❌ 个人错题整理</h3>
+            <div class="wrong-box" id="wrongList"></div>
+        </div>
+    </div>
+
+<script>
+const teams = ["超级飞侠组","待测电组","假期梦女","使莱克七怪","虎头帮","心满意组","弥乐佛组","未知组"];
+// 60条高考精准注释：实词50 + 词类活用10
+const questions = [
+    ["轩","狭小的房室，本文指书斋"],
+    ["旧","原先的，原来的"],
+    ["方丈","一丈见方，形容空间狭小"],
+    ["渗漉","雨水、泥土慢慢渗漏"],
+    ["雨泽","雨水"],
+    ["注","流淌，倾泻"],
+    ["顾","环顾，回头看"],
+    ["置","安放，摆放"],
+    ["得日","得到，照到"],
+    ["昏","昏暗，光线微弱"],
+    ["修葺","修缮，修补房屋"],
+    ["辟","开辟，开设"],
+    ["垣","矮墙，围墙"],
+    ["周","环绕，围住"],
+    ["当","遮挡，挡住"],
+    ["洞然","明亮通透的样子"],
+    ["栏楯","栏杆"],
+    ["增","增加，增添"],
+    ["胜","美好景致，美景"],
+    ["偃仰","俯仰闲适，指悠然闲居"],
+    ["冥然","寂静幽深的样子"],
+    ["兀坐","端坐，独自静坐"],
+    ["籁","自然界的各种声响"],
+    ["迨","等到，及至"],
+    ["诸父","各位伯父、叔父"],
+    ["异爨","分灶做饭，引申为分家"],
+    ["往往","到处，处处（古义）"],
+    ["吠","狗叫"],
+    ["逾","越过，穿过"],
+    ["庖","厨房"],
+    ["殆","大概，恐怕"],
+    ["先","已故的，去世的（多指长辈）"],
+    ["大母","祖母"],
+    ["厚","厚待，看重"],
+    ["扃牖","关闭窗户"],
+    ["扃","关闭"],
+    ["牖","窗户"],
+    ["居","停留，居住"],
+    ["尝","曾经"],
+    ["若","好像，如同"],
+    ["大类","很像，极相似"],
+    ["比","等到"],
+    ["归","古代女子出嫁"],
+    ["制","格局，规格，样式"],
+    ["述","记述，记叙"],
+    ["凡","总共，一共"],
+    ["再","两次"],
+    ["效","效仿，效法"],
+    ["植","栽种，种植"],
+    ["亭亭","直立挺拔的样子"],
+    ["盖","大概，表示推测"],
+    ["寄","寄托（情感、志趣）"],
+    ["下","名作状：向下"],
+    ["上","名作状：从上面"],
+    ["前","名作状：在前面"],
+    ["垣墙","名作动：砌上围墙"],
+    ["西","名作状：向西、在西边"],
+    ["乳","名作动：喂养、哺育"],
+    ["宴","名作动：吃饭、赴宴"],
+    ["手","名作状：亲手"],
+    ["多","形作名：许多事、诸多情景"]
+];
+
+let teamIndex=-1,userName="",time=300,timer,score=0,combo=0,select=[];
+let teamScores=Array(8).fill(0),userList=[];
+let wrongList = [];
+
+// 渲染小组选择
+function renderHome(){
+    let t=document.getElementById("teamBtns");
+    teams.forEach((s,i)=>{
+        t.innerHTML+=`<button class="team-btn" onclick="selectTeam(${i})">${s}</button>`;
+    });
+}
+let selectedBtn=null;
+function selectTeam(i){
+    teamIndex=i;
+    if(selectedBtn)selectedBtn.classList.remove("active");
+    let b=document.querySelectorAll(".team-btn")[i];
+    b.classList.add("active");
+    selectedBtn=b;
+}
+
+// 进入预习页
+function toPrepare(){
+    userName=document.getElementById("userName").value.trim();
+    if(teamIndex==-1){alert("请选择小组");return;}
+    if(!userName){alert("请输入姓名");return;}
+    
+    let pre=document.getElementById("preList");
+    pre.innerHTML="";
+    questions.forEach(q=>{
+        pre.innerHTML+=q[0]+" → "+q[1]+"<br>";
+    });
+    wrongList = []; // 重置错题
+    show("page2");
+    start60();
+}
+
+// 60秒预习倒计时
+function start60(){
+    let t=60;
+    let cd=setInterval(()=>{
+        t--;
+        document.getElementById("cd60").innerText=t;
+        if(t<=0){
+            clearInterval(cd);
+            toGame();
+        }
+    },1000);
+}
+
+// 进入游戏页
+function toGame(){
+    show("page3");
+    document.getElementById("showTeam").innerText=teams[teamIndex];
+    document.getElementById("showName").innerText=userName;
+    initCards(); // 初始化卡片
+    start300();  // 启动5分钟倒计时
+}
+
+// 5分钟游戏倒计时
+function start300(){
+    timer=setInterval(()=>{
+        time--;
+        document.getElementById("time300").innerText=time;
+        if(time<=0){
+            clearInterval(timer);
+            endGame();
+        }
+    },1000);
+}
+
+// 核心修改：初始化左右分栏密集卡片
+function initCards(){
+    let leftCol=document.getElementById("leftCol");
+    let rightCol=document.getElementById("rightCol");
+    leftCol.innerHTML="";
+    rightCol.innerHTML="";
+
+    // 左侧：字词卡片（固定顺序）
+    questions.forEach(q=>{
+        leftCol.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[0]}</div>`;
+    });
+
+    // 右侧：释义卡片（随机打乱）
+    let randomMeans=[...questions].sort(()=>Math.random()-0.5);
+    randomMeans.forEach(q=>{
+        rightCol.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[1]}</div>`;
+    });
+
+    // 绑定点击事件
+    bindClick();
+}
+
+// 绑定卡片点击事件
+function bindClick(){
+    document.querySelectorAll(".card.clickable").forEach(c=>{
+        c.onclick=function(){
+            if(time<=0 || this.classList.contains("hidden") || this.classList.contains("active")) return;
+            if(select.length>=2) return;
+            
+            this.classList.add("active");
+            select.push(this);
+            
+            if(select.length===2){
+                checkMatch(); // 检查配对是否正确
+            }
+        }
+    });
+}
+
+// 检查配对是否正确
+function checkMatch(){
+    let card1=select[0],card2=select[1];
+    let isMatch=card1.dataset.k===card2.dataset.k;
+
+    // 记录错题（去重）
+    if(!isMatch){
+        let wrongWord=card1.dataset.k;
+        let target=questions.find(item=>item[0]===wrongWord);
+        if(target && !wrongList.includes(wrongWord)){
+            wrongList.push(wrongWord);
+        }
+    }
+
+    // 延迟处理动画和计分
+    setTimeout(()=>{
+        // 移除选中状态
+        card1.classList.remove("active");
+        card2.classList.remove("active");
+
+        if(isMatch){
+            // 配对正确：隐藏卡片 + 加分
+            combo++;
+            let addScore=combo>=20?20:10; // 连击加分
+            score+=addScore;
+            teamScores[teamIndex]+=addScore;
+            
+            card1.classList.add("hidden");
+            card2.classList.add("hidden");
+        }else{
+            // 配对错误：抖动 + 扣分
+            combo=0;
+            score-=5;
+            teamScores[teamIndex]-=5;
+            
+            card1.classList.add("wrong");
+            card2.classList.add("wrong");
+            
+            // 移除错误样式
+            setTimeout(()=>{
+                card1.classList.remove("wrong");
+                card2.classList.remove("wrong");
+            },500);
+        }
+
+        // 更新得分
+        document.getElementById("score").innerText=score;
+        select=[]; // 清空选中队列
+    },300);
+}
+
+// 结束游戏，显示排名和错题
+function endGame(){
+    userList.push({name:userName,score:score,team:teamIndex});
+    show("page4");
+    showRank();    // 显示排名
+    showWrongList();// 显示错题
+}
+
+// 显示排名
+function showRank(){
+    // 小组排名
+    let teamArr=[];
+    teams.forEach((name,i)=>teamArr.push({name,score:teamScores[i]}));
+    teamArr.sort((a,b)=>b.score-a.score);
+    
+    let teamHtml="";
+    teamArr.forEach((item,i)=>{
+        let rankClass=i===0?"rank1":i===1?"rank2":i===2?"rank3":"rank-normal";
+        teamHtml+=`<div class="rank-item ${rankClass}">第${i+1}名：${item.name}（${item.score}分）</div>`;
+    });
+    document.getElementById("teamRank").innerHTML=teamHtml;
+
+    // 个人排名
+    let userArr=[...userList].sort((a,b)=>b.score-a.score);
+    let userHtml="";
+    userArr.forEach((item,i)=>{
+        let rankClass=i===0?"rank1":i===1?"rank2":i===2?"rank3":"rank-normal";
+        userHtml+=`<div class="rank-item ${rankClass}">第${i+1}名：${item.name}（${item.score}分）</div>`;
+    });
+    document.getElementById("userRank").innerHTML=userHtml;
+}
+
+// 显示错题整理
+function showWrongList(){
+    let wrongEl=document.getElementById("wrongList");
+    let html="";
+
+    if(wrongList.length===0){
+        html=`<div style="color:#28a745;font-weight:bold;text-align:center;">✅ 全部答对，没有错题！太棒了！</div>`;
+    }else{
+        wrongList.forEach(word=>{
+            let res=questions.find(q=>q[0]===word);
+            html+=`<div class="wrong-item">${word} → ${res[1]}</div>`;
+        });
+    }
+    wrongEl.innerHTML=html;
+}
+
+// 切换页面
+function show(pageId){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(pageId).classList.add("active");
+}
+
+// 初始化
+renderHome();
+</script>
+</body>
+</html>
