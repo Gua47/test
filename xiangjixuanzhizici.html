@@ -8,19 +8,18 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
         body{
             background:#f8f9fa;
-            padding:10px;
-            min-height:100vh;
-            /* 强制横屏适配 */
-            display:flex;
-            flex-direction:column;
+            padding:0 !important;
+            margin:0 !important;
+            width:100vw;
+            height:100vh;
+            overflow:hidden;
         }
-        /* 横屏提示 */
         .landscape-tip{
             display:none;
             text-align:center;
-            font-size:18px;
+            font-size:14px;
             color:#dc3545;
-            padding:20px;
+            padding:6px;
             font-weight:bold;
         }
         @media screen and (orientation:portrait) and (max-width:768px) {
@@ -32,489 +31,342 @@
         .active{display:block;}
 
         .title{
-            text-align:center;font-size:24px;margin:15px 0;
+            text-align:center;
+            font-size:16px;
+            margin:2px 0;
             background:linear-gradient(90deg,#0d6efd,#d63384);
             -webkit-background-clip:text;color:transparent;
         }
 
-        .team-select{text-align:center;margin:20px 0;}
+        .team-select{text-align:center;margin:4px 0;}
         .team-btn{
-            padding:8px 12px;margin:4px;border:none;
+            padding:4px 6px;margin:2px;border:none;
             background:linear-gradient(135deg,#0d6efd,#0a58ca);
-            color:white;border-radius:6px;
-            transition:0.3s;
-            font-size:14px;
+            color:white;border-radius:20px; /* 椭圆按钮 */
+            font-size:12px;
         }
         .team-btn.active{background:linear-gradient(135deg,#d63384,#a10c5a);}
-        .team-btn:hover{transform:scale(1.05);}
 
         .name-input{
-            display:block;margin:15px auto;padding:10px;
-            width:200px;font-size:14px;text-align:center;
-            border:2px solid #0d6efd;border-radius:6px;
+            display:block;margin:4px auto;padding:4px;
+            width:140px;font-size:12px;text-align:center;
+            border:1px solid #0d6efd;border-radius:20px; /* 椭圆输入框 */
         }
 
         .start-btn{
-            display:block;margin:20px auto;
-            padding:12px 30px;font-size:16px;
+            display:block;margin:6px auto;
+            padding:6px 16px;font-size:12px;
             background:linear-gradient(135deg,#d63384,#a10c5a);
-            color:white;border:none;border-radius:8px;
-            transition:0.3s;
+            color:white;border:none;border-radius:20px; /* 椭圆按钮 */
         }
-        .start-btn:hover{transform:scale(1.1);}
 
         .pre-content{
-            background:white;padding:15px;border-radius:8px;
-            margin:10px auto;max-height:200px;overflow-y:scroll;
-            line-height:1.6;font-size:14px;
-            box-shadow:0 3px 10px rgba(0,0,0,0.1);
-            width:90%;
+            background:white;padding:6px;border-radius:10px;
+            margin:2px auto;max-height:160px;overflow-y:scroll;
+            line-height:1.3;font-size:11px;
+            width:98%;
         }
 
         .countdown{
-            text-align:center;font-size:50px;font-weight:bold;
-            color:#dc3545;margin:10px 0;
+            text-align:center;font-size:28px;font-weight:bold;
+            color:#dc3545;margin:2px 0;
             animation:pulse 1s infinite alternate;
         }
         @keyframes pulse{from{transform:scale(1);}to{transform:scale(1.1);}}
 
-        .tip{text-align:center;font-size:16px;margin:8px 0;}
         .status{
             display:flex;justify-content:space-around;
-            margin:10px 0;font-weight:bold;
-            background:white;padding:8px;border-radius:8px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.1);
-            font-size:14px;
+            margin:1px 0;font-weight:bold;
+            background:white;padding:2px;border-radius:10px;
+            font-size:11px;
             flex-wrap:wrap;
         }
 
-        /* 核心修改：左右分栏密集排版 */
+        /* ========== 全屏椭圆卡片区域 ========== */
         .cards-container{
             display:flex;
-            justify-content:space-between;
-            width:98%;
-            margin:10px auto;
-            gap:10px;
-            height:calc(100vh - 180px);
+            width:100vw;
+            height:calc(100vh - 70px);
+            margin:0;
+            padding:0;
+            gap:1px;
         }
         .word-col, .mean-col{
-            width:48%;
+            width:50%;
+            height:100%;
             display:flex;
             flex-wrap:wrap;
             align-content:flex-start;
-            gap:5px;
+            gap:2px 4px; /* 椭圆卡片间距优化 */
             background:white;
-            padding:10px;
-            border-radius:8px;
-            box-shadow:0 3px 10px rgba(0,0,0,0.1);
+            padding:2px;
+            border:none;
             overflow-y:auto;
         }
 
-        /* 密集卡片样式 */
+        /* 核心：椭圆卡片（完全匹配参考图） */
         .card{
-            width:calc(33% - 4px);
-            min-width:80px;
-            height:50px;
-            line-height:50px;
+            width:auto; /* 自适应宽度，消除空白 */
+            min-width:60px;
+            height:32px;
+            line-height:32px;
             text-align:center;
-            border-radius:6px;
+            border-radius:50px; /* 椭圆圆角（关键） */
             user-select:none;
             transition:all 0.2s ease;
-            font-size:12px;
+            font-size:9px;
             overflow:hidden;
             text-overflow:ellipsis;
             white-space:nowrap;
-            padding:0 5px;
+            padding:0 8px; /* 左右内边距，上下无空白 */
+            margin:1px 2px;
         }
-        /* 左侧字词卡片 */
         .word-col .card{
-            background:#f86b88;
+            background:#f86b88; /* 参考图红色系 */
             color:white;
-            border:1px solid #d63384;
+            border:none; /* 去掉边框，减少空白 */
+            box-shadow:0 1px 2px rgba(214, 51, 132, 0.2);
         }
-        /* 右侧释义卡片 */
         .mean-col .card{
-            background:#4fc3f7;
+            background:#4fc3f7; /* 参考图青蓝色系 */
             color:white;
-            border:1px solid #0d6efd;
+            border:none; /* 去掉边框，减少空白 */
+            box-shadow:0 1px 2px rgba(13, 110, 253, 0.2);
         }
 
-        .card.hidden{
-            display:none;
-        }
+        .card.hidden{display:none !important;}
         .card.clickable{cursor:pointer;}
+        /* 高亮选中 + 放大提示 */
         .card.active{
-            transform:scale(1.08);
-            box-shadow:0 0 15px rgba(0,100,255,0.7);
-            border-color:white !important;
+            transform:scale(1.2);
+            box-shadow:0 0 15px rgba(255, 235, 59, 0.8);
+            background:#ffeb3b !important;
+            color:#000 !important;
+            font-weight:bold;
+            z-index:999;
         }
         .card.wrong{
-            background:#ff6b6b !important;
-            transform:scale(1.05);
+            background:#ff3d3d !important;
             animation:shake 0.4s;
         }
         @keyframes shake{
-            0%{transform:translateX(0);}25%{transform:translateX(-3px);}
-            50%{transform:translateX(3px);}75%{transform:translateX(-2px);}100%{transform:translateX(0);}
+            0%{transform:translateX(0);}25%{transform:translateX(-2px);}
+            50%{transform:translateX(2px);}100%{transform:translateX(0);}
         }
 
         .rank-box{
-            background:white;padding:15px;border-radius:8px;margin:10px auto;
-            box-shadow:0 3px 10px rgba(0,0,0,0.1);
-            width:90%;
+            background:white;padding:6px;border-radius:10px;margin:4px auto;
+            width:98%;
         }
         .rank-item{
-            padding:8px;margin:5px 0;border-radius:6px;
-            font-size:14px;font-weight:bold;
+            padding:4px;margin:2px 0;border-radius:20px; /* 椭圆排名项 */
+            font-size:12px;font-weight:bold;
         }
-        .rank1{background:#ffc107;color:#222;}
+        .rank1{background:#ffc107;}
         .rank2{background:#6c757d;color:white;}
         .rank3{background:#fd7e14;color:white;}
-        .rank-normal{background:#e9ecef;color:#222;}
 
         .wrong-box{
-            background:#fff0f3;padding:15px;border-radius:8px;margin:10px auto;
-            box-shadow:0 3px 10px rgba(255,76,96,0.1);
+            background:#fff0f3;padding:6px;border-radius:10px;margin:4px auto;
             border:2px solid #ff4c60;
-            width:90%;
+            width:98%;
         }
         .wrong-item{
-            padding:8px;margin:4px 0;
-            background:#ffeef1;border-radius:4px;
-            font-size:14px;
-            color:#d13444;
+            padding:4px 8px;margin:2px 0;
+            background:#ffeef1;color:#d13444;
+            font-size:11px;
+            border-radius:20px; /* 椭圆错题项 */
         }
     </style>
 </head>
 <body>
-    <!-- 横屏提示 -->
-    <div class="landscape-tip">📱 请将手机横屏使用，体验更佳！</div>
-    
-    <div class="main-content">
-        <div class="page active" id="page1">
-            <h2 class="title">📜《项脊轩志》文言字词PK赛</h2>
-            <div class="team-select" id="teamBtns"></div>
-            <input class="name-input" id="userName" placeholder="请输入你的名字">
-            <button class="start-btn" onclick="toPrepare()">游戏开始</button>
-        </div>
 
-        <div class="page" id="page2">
-            <h2 class="title">📖 60秒快速预习</h2>
-            <div class="pre-content" id="preList"></div>
-            <div class="countdown" id="cd60">60</div>
-            <div class="tip">时间结束自动进入游戏</div>
-        </div>
+<div class="landscape-tip">📱 请横屏使用，做题更快！</div>
+<div class="main-content">
 
-        <div class="page" id="page3">
-            <h2 class="title">🎯 开始PK！</h2>
-            <div class="status">
-                <div>小组：<span id="showTeam"></span></div>
-                <div>姓名：<span id="showName"></span></div>
-                <div>⏱时间：<span id="time300">300</span>s</div>
-                <div>得分：<span id="score">0</span></div>
-            </div>
-            <!-- 核心修改：左右分栏容器 -->
-            <div class="cards-container">
-                <div class="word-col" id="leftCol"></div>
-                <div class="mean-col" id="rightCol"></div>
-            </div>
-        </div>
+<div class="page active" id="page1">
+    <h2 class="title">📜《项脊轩志》文言字词PK赛</h2>
+    <div class="team-select" id="teamBtns"></div>
+    <input class="name-input" id="userName" placeholder="输入名字">
+    <button class="start-btn" onclick="toPrepare()">开始游戏</button>
+</div>
 
-        <div class="page" id="page4">
-            <h2 class="title">🏆 比赛结束</h2>
-            <h3 style="text-align:center;margin:8px 0;font-size:18px;">🥇 小组总排名</h3>
-            <div class="rank-box" id="teamRank"></div>
+<div class="page" id="page2">
+    <h2 class="title">📖 60秒预习</h2>
+    <div class="pre-content" id="preList"></div>
+    <div class="countdown" id="cd60">60</div>
+</div>
 
-            <h3 style="text-align:center;margin:15px 0 8px 0;font-size:18px;">👤 个人得分排名</h3>
-            <div class="rank-box" id="userRank"></div>
-
-            <h3 style="text-align:center;margin:15px 0 8px 0; color:#dc3545;font-size:18px;">❌ 个人错题整理</h3>
-            <div class="wrong-box" id="wrongList"></div>
-        </div>
+<div class="page" id="page3">
+    <h2 class="title">🎯 开始答题</h2>
+    <div class="status">
+        <div>小组：<span id="showTeam"></span></div>
+        <div>姓名：<span id="showName"></span></div>
+        <div>时间：<span id="time300">300</span>s</div>
+        <div>得分：<span id="score">0</span></div>
     </div>
+
+    <div class="cards-container">
+        <div class="word-col" id="leftCol"></div>
+        <div class="mean-col" id="rightCol"></div>
+    </div>
+</div>
+
+<div class="page" id="page4">
+    <h2 class="title">🏆 比赛结束</h2>
+    <h3 style="text-align:center;font-size:14px;">🥇小组排名</h3><div class="rank-box" id="teamRank"></div>
+    <h3 style="text-align:center;font-size:14px;">👤个人排名</h3><div class="rank-box" id="userRank"></div>
+    <h3 style="text-align:center;color:red;font-size:14px;">❌错题整理</h3><div class="wrong-box" id="wrongList"></div>
+</div>
+
+</div>
 
 <script>
 const teams = ["超级飞侠组","待测电组","假期梦女","使莱克七怪","虎头帮","心满意组","弥乐佛组","未知组"];
-// 60条高考精准注释：实词50 + 词类活用10
 const questions = [
-    ["轩","狭小的房室，本文指书斋"],
-    ["旧","原先的，原来的"],
-    ["方丈","一丈见方，形容空间狭小"],
-    ["渗漉","雨水、泥土慢慢渗漏"],
-    ["雨泽","雨水"],
-    ["注","流淌，倾泻"],
-    ["顾","环顾，回头看"],
-    ["置","安放，摆放"],
-    ["得日","得到，照到"],
-    ["昏","昏暗，光线微弱"],
-    ["修葺","修缮，修补房屋"],
-    ["辟","开辟，开设"],
-    ["垣","矮墙，围墙"],
-    ["周","环绕，围住"],
-    ["当","遮挡，挡住"],
-    ["洞然","明亮通透的样子"],
-    ["栏楯","栏杆"],
-    ["增","增加，增添"],
-    ["胜","美好景致，美景"],
-    ["偃仰","俯仰闲适，指悠然闲居"],
-    ["冥然","寂静幽深的样子"],
-    ["兀坐","端坐，独自静坐"],
-    ["籁","自然界的各种声响"],
-    ["迨","等到，及至"],
-    ["诸父","各位伯父、叔父"],
-    ["异爨","分灶做饭，引申为分家"],
-    ["往往","到处，处处（古义）"],
-    ["吠","狗叫"],
-    ["逾","越过，穿过"],
-    ["庖","厨房"],
-    ["殆","大概，恐怕"],
-    ["先","已故的，去世的（多指长辈）"],
-    ["大母","祖母"],
-    ["厚","厚待，看重"],
-    ["扃牖","关闭窗户"],
-    ["扃","关闭"],
-    ["牖","窗户"],
-    ["居","停留，居住"],
-    ["尝","曾经"],
-    ["若","好像，如同"],
-    ["大类","很像，极相似"],
-    ["比","等到"],
-    ["归","古代女子出嫁"],
-    ["制","格局，规格，样式"],
-    ["述","记述，记叙"],
-    ["凡","总共，一共"],
-    ["再","两次"],
-    ["效","效仿，效法"],
-    ["植","栽种，种植"],
-    ["亭亭","直立挺拔的样子"],
-    ["盖","大概，表示推测"],
-    ["寄","寄托（情感、志趣）"],
-    ["下","名作状：向下"],
-    ["上","名作状：从上面"],
-    ["前","名作状：在前面"],
-    ["垣墙","名作动：砌上围墙"],
-    ["西","名作状：向西、在西边"],
-    ["乳","名作动：喂养、哺育"],
-    ["宴","名作动：吃饭、赴宴"],
-    ["手","名作状：亲手"],
-    ["多","形作名：许多事、诸多情景"]
+    ["轩","狭小的房室，本文指书斋"],["旧","原先的，原来的"],["方丈","一丈见方，空间狭小"],
+    ["渗漉","泥土雨水慢慢渗漏"],["雨泽","雨水"],["注","流淌倾泻"],["顾","环顾回头看"],
+    ["置","安放摆放"],["得日","照到阳光"],["昏","昏暗"],["修葺","修缮房屋"],["辟","开辟"],
+    ["垣","矮墙围墙"],["周","环绕"],["当","遮挡"],["洞然","明亮通透"],["栏楯","栏杆"],
+    ["增","增加"],["胜","美景"],["偃仰","悠然闲居"],["冥然","寂静"],["兀坐","端坐"],
+    ["籁","自然声响"],["迨","等到"],["诸父","伯父叔父"],["异爨","分家"],["往往","到处"],
+    ["吠","狗叫"],["逾","越过"],["庖","厨房"],["殆","大概"],["先","已故长辈"],["大母","祖母"],
+    ["厚","厚待"],["扃牖","关闭窗户"],["扃","关闭"],["牖","窗户"],["居","停留"],["尝","曾经"],
+    ["若","好像"],["大类","很像"],["比","等到"],["归","女子出嫁"],["制","格局样式"],["述","记述"],
+    ["凡","总共"],["再","两次"],["效","效仿"],["植","栽种"],["亭亭","挺拔"],["盖","大概"],
+    ["寄","寄托"],["下","名作状：向下"],["上","名作状：从上面"],["前","名作状：在前面"],
+    ["垣墙","名作动：砌围墙"],["西","名作状：向西"],["乳","名作动：喂养"],["宴","名作动：吃饭"],
+    ["手","名作状：亲手"],["多","形作名：许多事"]
 ];
 
-let teamIndex=-1,userName="",time=300,timer,score=0,combo=0,select=[];
-let teamScores=Array(8).fill(0),userList=[];
-let wrongList = [];
+let teamIndex=-1,userName="",time=300,timer,score=0,select=[];
+let teamScores=Array(8).fill(0),userList=[],wrongList=[];
 
-// 渲染小组选择
+// 渲染小组
 function renderHome(){
     let t=document.getElementById("teamBtns");
     teams.forEach((s,i)=>{
         t.innerHTML+=`<button class="team-btn" onclick="selectTeam(${i})">${s}</button>`;
     });
 }
-let selectedBtn=null;
 function selectTeam(i){
     teamIndex=i;
-    if(selectedBtn)selectedBtn.classList.remove("active");
-    let b=document.querySelectorAll(".team-btn")[i];
-    b.classList.add("active");
-    selectedBtn=b;
+    document.querySelectorAll(".team-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".team-btn")[i].classList.add("active");
 }
 
-// 进入预习页
+// 预习
 function toPrepare(){
     userName=document.getElementById("userName").value.trim();
-    if(teamIndex==-1){alert("请选择小组");return;}
-    if(!userName){alert("请输入姓名");return;}
-    
-    let pre=document.getElementById("preList");
-    pre.innerHTML="";
-    questions.forEach(q=>{
-        pre.innerHTML+=q[0]+" → "+q[1]+"<br>";
-    });
-    wrongList = []; // 重置错题
-    show("page2");
-    start60();
+    if(teamIndex==-1||!userName){alert("请选小组+填名字");return;}
+    let pre=document.getElementById("preList");pre.innerHTML="";
+    questions.forEach(q=>pre.innerHTML+=q[0]+" → "+q[1]+"<br>");
+    wrongList=[];show("page2");start60();
 }
-
-// 60秒预习倒计时
 function start60(){
-    let t=60;
-    let cd=setInterval(()=>{
-        t--;
-        document.getElementById("cd60").innerText=t;
-        if(t<=0){
-            clearInterval(cd);
-            toGame();
-        }
+    let t=60;let cd=setInterval(()=>{
+        t--;document.getElementById("cd60").innerText=t;
+        if(t<=0){clearInterval(cd);toGame();}
     },1000);
 }
 
-// 进入游戏页
+// 游戏
 function toGame(){
     show("page3");
     document.getElementById("showTeam").innerText=teams[teamIndex];
     document.getElementById("showName").innerText=userName;
-    initCards(); // 初始化卡片
-    start300();  // 启动5分钟倒计时
+    initCards();start300();
 }
-
-// 5分钟游戏倒计时
 function start300(){
     timer=setInterval(()=>{
-        time--;
-        document.getElementById("time300").innerText=time;
-        if(time<=0){
-            clearInterval(timer);
-            endGame();
-        }
+        time--;document.getElementById("time300").innerText=time;
+        if(time<=0){clearInterval(timer);endGame();}
     },1000);
 }
 
-// 核心修改：初始化左右分栏密集卡片
+// 核心：椭圆卡片 + 自动乱序 + 自动隐藏
 function initCards(){
-    let leftCol=document.getElementById("leftCol");
-    let rightCol=document.getElementById("rightCol");
-    leftCol.innerHTML="";
-    rightCol.innerHTML="";
-
-    // 左侧：字词卡片（固定顺序）
+    let L=document.getElementById("leftCol"),R=document.getElementById("rightCol");
+    L.innerHTML="";R.innerHTML="";
+    // 左侧字词（椭圆卡片）
     questions.forEach(q=>{
-        leftCol.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[0]}</div>`;
+        L.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[0]}</div>`;
     });
-
-    // 右侧：释义卡片（随机打乱）
-    let randomMeans=[...questions].sort(()=>Math.random()-0.5);
-    randomMeans.forEach(q=>{
-        rightCol.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[1]}</div>`;
+    // 右侧释义 随机乱序（椭圆卡片）
+    let rand=[...questions].sort(()=>Math.random()-0.5);
+    rand.forEach(q=>{
+        R.innerHTML+=`<div class="card clickable" data-k="${q[0]}">${q[1]}</div>`;
     });
-
-    // 绑定点击事件
     bindClick();
 }
 
-// 绑定卡片点击事件
+// 点击
 function bindClick(){
     document.querySelectorAll(".card.clickable").forEach(c=>{
         c.onclick=function(){
-            if(time<=0 || this.classList.contains("hidden") || this.classList.contains("active")) return;
-            if(select.length>=2) return;
-            
+            if(time<=0||this.classList.contains("hidden")||this.classList.contains("active")) return;
+            if(select.length>=2)return;
             this.classList.add("active");
             select.push(this);
-            
-            if(select.length===2){
-                checkMatch(); // 检查配对是否正确
-            }
+            if(select.length===2) check();
         }
     });
 }
 
-// 检查配对是否正确
-function checkMatch(){
-    let card1=select[0],card2=select[1];
-    let isMatch=card1.dataset.k===card2.dataset.k;
+// 判题 + 自动隐藏已答对卡片（提速核心）
+function check(){
+    let a=select[0],b=select[1];
+    let ok=a.dataset.k===b.dataset.k;
 
-    // 记录错题（去重）
-    if(!isMatch){
-        let wrongWord=card1.dataset.k;
-        let target=questions.find(item=>item[0]===wrongWord);
-        if(target && !wrongList.includes(wrongWord)){
-            wrongList.push(wrongWord);
-        }
+    if(!ok){
+        let w=a.dataset.k;
+        if(!wrongList.includes(w)) wrongList.push(w);
     }
 
-    // 延迟处理动画和计分
     setTimeout(()=>{
-        // 移除选中状态
-        card1.classList.remove("active");
-        card2.classList.remove("active");
-
-        if(isMatch){
-            // 配对正确：隐藏卡片 + 加分
-            combo++;
-            let addScore=combo>=20?20:10; // 连击加分
-            score+=addScore;
-            teamScores[teamIndex]+=addScore;
-            
-            card1.classList.add("hidden");
-            card2.classList.add("hidden");
+        a.classList.remove("active");b.classList.remove("active");
+        if(ok){
+            score+=10;teamScores[teamIndex]+=10;
+            a.classList.add("hidden");
+            b.classList.add("hidden");
         }else{
-            // 配对错误：抖动 + 扣分
-            combo=0;
-            score-=5;
-            teamScores[teamIndex]-=5;
-            
-            card1.classList.add("wrong");
-            card2.classList.add("wrong");
-            
-            // 移除错误样式
-            setTimeout(()=>{
-                card1.classList.remove("wrong");
-                card2.classList.remove("wrong");
-            },500);
+            a.classList.add("wrong");b.classList.add("wrong");
+            setTimeout(()=>{a.classList.remove("wrong");b.classList.remove("wrong");},300);
         }
-
-        // 更新得分
         document.getElementById("score").innerText=score;
-        select=[]; // 清空选中队列
-    },300);
+        select=[];
+    },200);
 }
 
-// 结束游戏，显示排名和错题
+// 结束
 function endGame(){
-    userList.push({name:userName,score:score,team:teamIndex});
-    show("page4");
-    showRank();    // 显示排名
-    showWrongList();// 显示错题
+    userList.push({name:userName,score:score});
+    show("page4");showRank();showWrong();
 }
-
-// 显示排名
 function showRank(){
-    // 小组排名
-    let teamArr=[];
-    teams.forEach((name,i)=>teamArr.push({name,score:teamScores[i]}));
-    teamArr.sort((a,b)=>b.score-a.score);
-    
-    let teamHtml="";
-    teamArr.forEach((item,i)=>{
-        let rankClass=i===0?"rank1":i===1?"rank2":i===2?"rank3":"rank-normal";
-        teamHtml+=`<div class="rank-item ${rankClass}">第${i+1}名：${item.name}（${item.score}分）</div>`;
+    let teamHtml="",userHtml="";
+    teams.forEach((n,i)=>teamHtml+=`<div class="rank-item">${n}：${teamScores[i]}分</div>`);
+    userList.sort((a,b)=>b.score-a.score).forEach((u,i)=>{
+        userHtml+=`<div class="rank-item">第${i+1}名：${u.name}（${u.score}分）</div>`;
     });
     document.getElementById("teamRank").innerHTML=teamHtml;
-
-    // 个人排名
-    let userArr=[...userList].sort((a,b)=>b.score-a.score);
-    let userHtml="";
-    userArr.forEach((item,i)=>{
-        let rankClass=i===0?"rank1":i===1?"rank2":i===2?"rank3":"rank-normal";
-        userHtml+=`<div class="rank-item ${rankClass}">第${i+1}名：${item.name}（${item.score}分）</div>`;
-    });
     document.getElementById("userRank").innerHTML=userHtml;
 }
-
-// 显示错题整理
-function showWrongList(){
-    let wrongEl=document.getElementById("wrongList");
+function showWrong(){
     let html="";
-
-    if(wrongList.length===0){
-        html=`<div style="color:#28a745;font-weight:bold;text-align:center;">✅ 全部答对，没有错题！太棒了！</div>`;
-    }else{
-        wrongList.forEach(word=>{
-            let res=questions.find(q=>q[0]===word);
-            html+=`<div class="wrong-item">${word} → ${res[1]}</div>`;
-        });
-    }
-    wrongEl.innerHTML=html;
+    if(wrongList.length===0) html=`<div style="color:green;text-align:center;">✅ 全对！</div>`;
+    else wrongList.forEach(w=>{
+        let ans=questions.find(q=>q[0]==w);
+        html+=`<div class="wrong-item">${w} → ${ans[1]}</div>`;
+    });
+    document.getElementById("wrongList").innerHTML=html;
 }
 
-// 切换页面
-function show(pageId){
+function show(id){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.getElementById(pageId).classList.add("active");
+    document.getElementById(id).classList.add("active");
 }
 
-// 初始化
 renderHome();
 </script>
 </body>
