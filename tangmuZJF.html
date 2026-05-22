@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN" translate="no">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>汤姆猫文言文跑酷</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,11 +14,10 @@
         }
         
         body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', 'STKaiti', 'KaiTi', sans-serif;
+            font-family: 'Noto Serif SC', 'STKaiti', 'KaiTi', serif;
             background: #1a1a2e;
             overflow: hidden;
             height: 100vh;
-            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -32,269 +32,545 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 0 50px rgba(233, 69, 96, 0.3);
-            transform-origin: center center;
         }
         
         /* 汤姆猫样式 */
-        .tom-cat { width: 60px; height: 80px; position: absolute; left: 100px; bottom: 120px; z-index: 10; transition: bottom 0.3s ease; }
-        .tom-body { width: 50px; height: 55px; background: #4a90d9; border-radius: 25px 25px 20px 20px; position: absolute; left: 5px; top: 20px; border: 2px solid #2c5a8a; }
-        .tom-head { width: 40px; height: 35px; background: #4a90d9; border-radius: 50%; position: absolute; left: 10px; top: 0; border: 2px solid #2c5a8a; }
-        .tom-ear { width: 12px; height: 16px; background: #4a90d9; border-radius: 50% 50% 0 0; position: absolute; top: -8px; border: 2px solid #2c5a8a; }
+        .tom-cat {
+            width: 60px;
+            height: 80px;
+            position: absolute;
+            left: 100px;
+            bottom: 120px;
+            z-index: 10;
+        }
+        
+        .tom-body {
+            width: 50px;
+            height: 55px;
+            background: #4a90d9;
+            border-radius: 25px 25px 20px 20px;
+            position: absolute;
+            left: 5px;
+            top: 20px;
+            border: 2px solid #2c5a8a;
+        }
+        
+        .tom-head {
+            width: 40px;
+            height: 35px;
+            background: #4a90d9;
+            border-radius: 50%;
+            position: absolute;
+            left: 10px;
+            top: 0;
+            border: 2px solid #2c5a8a;
+        }
+        
+        .tom-ear {
+            width: 12px;
+            height: 16px;
+            background: #4a90d9;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -8px;
+            border: 2px solid #2c5a8a;
+        }
+        
         .tom-ear.left { left: 8px; transform: rotate(-20deg); }
         .tom-ear.right { right: 8px; transform: rotate(20deg); }
-        .tom-eye { width: 10px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 8px; border: 1px solid #2c5a8a; }
+        
+        .tom-eye {
+            width: 10px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 8px;
+            border: 1px solid #2c5a8a;
+        }
+        
         .tom-eye.left { left: 6px; }
         .tom-eye.right { right: 6px; }
-        .tom-pupil { width: 5px; height: 6px; background: #1a1a2e; border-radius: 50%; position: absolute; top: 3px; left: 2px; }
-        .tom-nose { width: 6px; height: 4px; background: #ff6b8a; border-radius: 50%; position: absolute; top: 18px; left: 17px; }
-        .tom-mouth { width: 16px; height: 6px; border: 2px solid #2c5a8a; border-top: none; border-radius: 0 0 10px 10px; position: absolute; top: 22px; left: 12px; }
-        .tom-whisker { width: 12px; height: 1px; background: #2c5a8a; position: absolute; top: 18px; }
+        
+        .tom-pupil {
+            width: 5px;
+            height: 6px;
+            background: #1a1a2e;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 2px;
+        }
+        
+        .tom-nose {
+            width: 6px;
+            height: 4px;
+            background: #ff6b8a;
+            border-radius: 50%;
+            position: absolute;
+            top: 18px;
+            left: 17px;
+        }
+        
+        .tom-mouth {
+            width: 16px;
+            height: 6px;
+            border: 2px solid #2c5a8a;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            position: absolute;
+            top: 22px;
+            left: 12px;
+        }
+        
+        .tom-whisker {
+            width: 12px;
+            height: 1px;
+            background: #2c5a8a;
+            position: absolute;
+            top: 18px;
+        }
+        
         .tom-whisker.left1 { left: -8px; top: 16px; }
         .tom-whisker.left2 { left: -8px; top: 20px; }
         .tom-whisker.right1 { right: -8px; top: 16px; }
         .tom-whisker.right2 { right: -8px; top: 20px; }
-        .tom-leg { width: 14px; height: 20px; background: #4a90d9; border-radius: 0 0 7px 7px; position: absolute; bottom: -18px; border: 2px solid #2c5a8a; border-top: none; }
+        
+        .tom-leg {
+            width: 14px;
+            height: 20px;
+            background: #4a90d9;
+            border-radius: 0 0 7px 7px;
+            position: absolute;
+            bottom: -18px;
+            border: 2px solid #2c5a8a;
+            border-top: none;
+        }
+        
         .tom-leg.left { left: 8px; }
         .tom-leg.right { right: 8px; }
-        .tom-tail { width: 8px; height: 25px; background: #4a90d9; border-radius: 0 0 4px 4px; position: absolute; right: -6px; top: 30px; transform: rotate(-30deg); border: 2px solid #2c5a8a; }
-        .tom-belly { width: 30px; height: 25px; background: #87ceeb; border-radius: 50%; position: absolute; left: 10px; top: 35px; }
         
-        @keyframes run { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
-        .running .tom-leg.left { animation: run 0.3s infinite; }
-        .running .tom-leg.right { animation: run 0.3s infinite reverse; }
-        .running .tom-tail { animation: run 0.2s infinite; }
-        .jumping { bottom: 280px !important; }
+        .tom-tail {
+            width: 8px;
+            height: 25px;
+            background: #4a90d9;
+            border-radius: 0 0 4px 4px;
+            position: absolute;
+            right: -6px;
+            top: 30px;
+            transform: rotate(-30deg);
+            border: 2px solid #2c5a8a;
+        }
         
-        .ground { width: 100%; height: 120px; background: #0f3460; position: absolute; bottom: 0; border-top: 3px solid #e94560; }
-        .ground-line { width: 100%; height: 3px; background: #e94560; position: absolute; top: 0; opacity: 0.5; }
-        .obstacle { width: 40px; height: 50px; background: #e94560; position: absolute; bottom: 120px; border-radius: 5px 5px 0 0; border: 2px solid #c73e54; }
-        .obstacle::before { content: '❌'; position: absolute; top: 10px; left: 8px; font-size: 20px; }
-        .coin { width: 30px; height: 30px; background: #ffd700; border-radius: 50%; position: absolute; bottom: 200px; border: 3px solid #ffaa00; box-shadow: 0 0 10px #ffd700; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #b8860b; font-size: 14px; }
-        .coin::after { content: '文'; }
+        .tom-belly {
+            width: 30px;
+            height: 25px;
+            background: #87ceeb;
+            border-radius: 50%;
+            position: absolute;
+            left: 10px;
+            top: 35px;
+        }
         
-        .bg-building { width: 80px; height: 200px; background: #1a1a2e; position: absolute; bottom: 120px; border: 2px solid #0f3460; opacity: 0.6; }
-        .bg-building::before { content: ''; width: 60px; height: 60px; background: #16213e; position: absolute; top: 20px; left: 8px; border: 1px solid #0f3460; }
+        /* 跑步动画 */
+        @keyframes run {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(15deg); }
+        }
         
-        #quizPanel { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 600px; background: rgba(22, 33, 62, 0.98); border: 3px solid #e94560; border-radius: 15px; padding: 25px; z-index: 100; display: none; box-shadow: 0 0 30px rgba(233, 69, 96, 0.5); }
+        .running .tom-leg.left { animation: run 0.2s infinite; }
+        .running .tom-leg.right { animation: run 0.2s infinite reverse; }
+        .running .tom-tail { animation: run 0.15s infinite; }
+        
+        /* 地面 */
+        .ground {
+            width: 100%;
+            height: 120px;
+            background: #0f3460;
+            position: absolute;
+            bottom: 0;
+            border-top: 3px solid #e94560;
+        }
+        
+        /* 障碍物 */
+        .obstacle {
+            width: 40px;
+            height: 50px;
+            background: #e94560;
+            position: absolute;
+            bottom: 120px;
+            border-radius: 5px 5px 0 0;
+            border: 2px solid #c73e54;
+        }
+        
+        .obstacle::before {
+            content: '❌';
+            position: absolute;
+            top: 10px;
+            left: 8px;
+            font-size: 20px;
+        }
+        
+        /* 金币 */
+        .coin {
+            width: 34px;
+            height: 34px;
+            background: #ffd700;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 240px;
+            border: 3px solid #ffaa00;
+            box-shadow: 0 0 10px #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #b8860b;
+            font-size: 14px;
+        }
+        
+        .coin::after {
+            content: '文';
+        }
+        
+        /* 答题面板 */
+        #quizPanel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background: rgba(22, 33, 62, 0.95);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            padding: 30px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+        
         #quizPanel.active { display: block; }
-        .quiz-title { color: #e94560; font-size: 22px; text-align: center; margin-bottom: 15px; font-weight: bold; }
-        .quiz-question { color: #eaeaea; font-size: 18px; line-height: 1.6; margin-bottom: 20px; text-align: center; }
-        .quiz-input { width: 100%; padding: 12px; font-size: 18px; background: #0f3460; border: 2px solid #4a90d9; border-radius: 10px; color: #eaeaea; text-align: center; font-family: inherit; outline: none; }
-        .quiz-input:focus { border-color: #e94560; box-shadow: 0 0 15px rgba(233, 69, 96, 0.4); }
-        .quiz-btn { width: 100%; padding: 12px; margin-top: 15px; background: #e94560; border: none; border-radius: 10px; color: white; font-size: 18px; cursor: pointer; font-weight: bold; font-family: inherit; transition: all 0.3s; }
-        .quiz-btn:hover { background: #ff6b8a; transform: scale(1.02); }
-        .quiz-hint { color: #87ceeb; font-size: 14px; text-align: center; margin-top: 10px; }
+        .quiz-title { color: #ffd700; font-size: 24px; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        .quiz-question { color: #eaeaea; font-size: 18px; line-height: 1.8; margin-bottom: 20px; text-align: center; }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+        .quiz-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0f3460;
+            border: 2px solid #4a90d9;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: 'Noto Serif SC', serif;
+            transition: all 0.2s;
+            text-align: left;
+            padding-left: 20px;
+        }
+        .quiz-btn:hover { background: #4a90d9; border-color: #ffd700; }
         
-        #topBar { position: absolute; top: 0; left: 0; width: 100%; height: 50px; background: rgba(0,0,0,0.6); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 50; color: #ffd700; font-size: 16px; font-weight: bold; }
+        /* 顶部信息栏 */
+        #topBar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 50;
+            color: #ffd700;
+            font-size: 16px;
+        }
         .info-item { display: flex; align-items: center; gap: 5px; }
         .info-label { color: #87ceeb; }
         
-        #startScreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #16213e; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; }
-        .start-title { font-size: 40px; color: #e94560; margin-bottom: 15px; text-shadow: 0 0 20px rgba(233, 69, 96, 0.5); font-weight: bold; text-align: center; }
-        .start-subtitle { font-size: 20px; color: #87ceeb; margin-bottom: 30px; text-align: center; }
-        .start-btn { padding: 15px 50px; font-size: 22px; background: #e94560; border: none; border-radius: 15px; color: white; cursor: pointer; font-family: inherit; font-weight: bold; transition: all 0.3s; box-shadow: 0 0 20px rgba(233, 69, 96, 0.4); }
-        .start-btn:hover { background: #ff6b8a; transform: scale(1.05); }
-        .start-instructions { margin-top: 25px; color: #ddd; font-size: 16px; text-align: center; line-height: 1.8; }
+        /* 开始与结束画面 */
+        #startScreen, #resultScreen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #16213e;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 200;
+        }
+        #resultScreen { background: rgba(0,0,0,0.9); display: none; }
+        .start-title { font-size: 42px; color: #e94560; margin-bottom: 20px; text-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
+        .start-subtitle { font-size: 20px; color: #87ceeb; margin-bottom: 40px; }
+        .action-btn {
+            padding: 15px 50px; font-size: 22px; background: #e94560; border: none; border-radius: 15px;
+            color: white; cursor: pointer; font-family: 'Noto Serif SC', serif; transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
+        }
+        .action-btn:hover { background: #ff6b8a; transform: scale(1.05); }
+        .instructions { margin-top: 30px; color: #aaa; font-size: 14px; text-align: center; line-height: 2; }
         
-        #resultScreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 200; }
-        .result-title { font-size: 36px; margin-bottom: 15px; font-weight: bold; }
+        .result-title { font-size: 36px; margin-bottom: 20px; }
         .result-title.win { color: #ffd700; }
-        .result-title.lose { color: #e94560; }
-        .result-score { font-size: 24px; color: #87ceeb; margin-bottom: 25px; }
-        .result-detail { color: #ddd; font-size: 16px; margin-bottom: 25px; text-align: center; max-width: 80%; line-height: 1.8; }
-        
-        .error-shake { animation: shake 0.5s ease-in-out; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-        .correct-glow { animation: glow 0.5s ease-in-out; }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 0 transparent; } 50% { box-shadow: 0 0 30px #ffd700; } }
-        
-        .level-badge { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); background: #e94560; color: white; padding: 8px 20px; border-radius: 20px; font-size: 16px; font-weight: bold; z-index: 40; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
-        .level-badge.show { opacity: 1; }
-        .particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; z-index: 60; }
-        .lives { display: flex; gap: 5px; }
-        .life { font-size: 20px; color: #e94560; }
-        .life.lost { opacity: 0.3; }
-        
-        .scrolling-bg { position: absolute; bottom: 120px; left: 0; width: 200%; height: 200px; display: flex; z-index: 1; }
-        .scrolling-bg-inner { width: 50%; height: 100%; display: flex; justify-content: space-around; align-items: flex-end; }
-        #gameObjects { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
+        .result-score { font-size: 24px; color: #87ceeb; margin-bottom: 30px; }
     </style>
 </head>
 <body>
-    <div id="gameContainer">
-        <div id="topBar">
-            <div class="info-item"><span class="info-label">关卡:</span><span id="levelText">项脊轩志</span></div>
-            <div class="info-item"><span class="info-label">题目:</span><span id="questionNum">1/10</span></div>
-            <div class="info-item"><span class="info-label">金币:</span><span id="coinCount">0</span></div>
-            <div class="info-item lives" id="livesContainer">
-                <span class="life">❤</span><span class="life">❤</span><span class="life">❤</span>
-            </div>
+
+<div id="gameContainer">
+    <!-- 顶部状态栏 -->
+    <div id="topBar">
+        <div class="info-item"><span class="info-label">得分:</span><span id="scoreVal">0</span></div>
+        <div class="info-item"><span class="info-label">进度:</span><span id="progressVal">0%</span></div>
+    </div>
+
+    <!-- 汤姆猫 -->
+    <div id="tom" class="tom-cat running">
+        <div class="tom-ear left"></div>
+        <div class="tom-ear right"></div>
+        <div class="tom-head">
+            <div class="tom-eye left"><div class="tom-pupil"></div></div>
+            <div class="tom-eye right"><div class="tom-pupil"></div></div>
+            <div class="tom-nose"></div>
+            <div class="tom-mouth"></div>
+            <div class="tom-whisker left1"></div>
+            <div class="tom-whisker left2"></div>
+            <div class="tom-whisker right1"></div>
+            <div class="tom-whisker right2"></div>
         </div>
-        
-        <div class="level-badge" id="levelBadge">第一关：项脊轩志</div>
-        
-        <div class="scrolling-bg" id="scrollingBg">
-            <div class="scrolling-bg-inner" id="bgInner1"></div>
-            <div class="scrolling-bg-inner" id="bgInner2"></div>
+        <div class="tom-body">
+            <div class="tom-belly"></div>
         </div>
-        
-        <div class="ground"><div class="ground-line"></div></div>
-        
-        <div class="tom-cat" id="tomCat">
-            <div class="tom-ear left"></div><div class="tom-ear right"></div>
-            <div class="tom-head">
-                <div class="tom-eye left"><div class="tom-pupil"></div></div>
-                <div class="tom-eye right"><div class="tom-pupil"></div></div>
-                <div class="tom-nose"></div><div class="tom-mouth"></div>
-                <div class="tom-whisker left1"></div><div class="tom-whisker left2"></div>
-                <div class="tom-whisker right1"></div><div class="tom-whisker right2"></div>
-            </div>
-            <div class="tom-body"><div class="tom-belly"></div></div>
-            <div class="tom-leg left"></div><div class="tom-leg right"></div>
-            <div class="tom-tail"></div>
-        </div>
-        
-        <div id="gameObjects"></div>
-        
-        <div id="quizPanel">
-            <div class="quiz-title" id="quizTitle">项脊轩志 · 理解性默写</div>
-            <div class="quiz-question" id="quizQuestion">题目加载中...</div>
-            <input type="text" class="quiz-input" id="quizInput" placeholder="请手写输入答案" autocomplete="off">
-            <button class="quiz-btn" id="submitBtn">提交答案</button>
-            <div class="quiz-hint" id="quizHint">提示：注意字词正确</div>
-        </div>
-        
-        <div id="startScreen">
-            <div class="start-title">🐱 汤姆猫文言文跑酷</div>
-            <div class="start-subtitle">高中必背文言文默写挑战</div>
-            <button class="start-btn" id="startBtn">开始游戏</button>
-            <div class="start-instructions">
-                📖 第一关：《项脊轩志》10题<br>
-                📖 第二关：《陈情表》10题<br>
-                ✍️ 答对题目，汤姆猫起跑拾取金币<br>
-                ❌ 答错3次更换题目，撞到障碍失去生命
-            </div>
-        </div>
-        
-        <div id="resultScreen">
-            <div class="result-title" id="resultTitle">游戏结束</div>
-            <div class="result-score" id="resultScore">得分：0</div>
-            <div class="result-detail" id="resultDetail"></div>
-            <button class="start-btn" id="restartBtn" style="padding: 15px 40px; font-size: 18px;">重新开始</button>
+        <div class="tom-tail"></div>
+        <div class="tom-leg left"></div>
+        <div class="tom-leg right"></div>
+    </div>
+
+    <!-- 地面 -->
+    <div class="ground"></div>
+
+    <!-- 答题面板 -->
+    <div id="quizPanel">
+        <div class="quiz-title">💡 文言断句与翻译</div>
+        <div id="questionText" class="quiz-question">加载中...</div>
+        <div class="quiz-options" id="optionsContainer"></div>
+    </div>
+
+    <!-- 开始画面 -->
+    <div id="startScreen">
+        <div class="start-title">汤姆猫文言文跑酷</div>
+        <div class="start-subtitle">御猫凌空踏步，妙解圣贤之言</div>
+        <button class="action-btn" onclick="startGame()">开始游戏</button>
+        <div class="instructions">
+            操作指南：按下 <b>空格键 (Space)</b> 或 <b>点击游戏画面</b> 触发跳跃<br>
+            碰触【金币】触发文言文答题，答对获得高额积分！避免碰撞【❌障碍物】！
         </div>
     </div>
 
-    <script>
-    // 采用立即执行函数，移除可能导致不触发的 DOMContentLoaded 监听器
-    (function() {
-        
-        // 屏幕自适应缩放逻辑
-        function resizeGame() {
-            const container = document.getElementById('gameContainer');
-            if (!container) return;
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            const scale = Math.min(windowWidth / 900, windowHeight / 600) * 0.95;
-            container.style.transform = `scale(${scale})`;
-        }
-        window.addEventListener('resize', resizeGame);
-        resizeGame(); // 立即执行一次自适应
+    <!-- 结算画面 -->
+    <div id="resultScreen">
+        <div class="result-title win">试炼结束</div>
+        <div class="result-score">最终得分: <span id="finalScore">0</span></div>
+        <button class="action-btn" onclick="restartGame()">再来一次</button>
+    </div>
+</div>
 
-        // 题库数据
-        const xiangJiXuanQuestions = [
-            { question: "《项脊轩志》中，描写项脊轩的大小和面积的句子是：________，________。", answer: ["室仅方丈", "可容一人居"], keywords: ["室仅方丈", "可容一人居"], hint: "注意'方丈'不是寺庙主持的意思" },
-            { question: "《项脊轩志》中，描写'百年老屋'项脊轩在修葺之前旧、破的句子是：________，________。", answer: ["尘泥渗漉", "雨泽下注"], keywords: ["尘泥渗漉", "雨泽下注"], hint: "注意'渗漉'二字的写法" },
-            { question: "《项脊轩志》中，描写了北向的项脊轩修葺之前采光不好的情况的句子是：________，________。", answer: ["不能得日", "日过午已昏"], keywords: ["不能得日", "日过午已昏"], hint: "注意'已昏'的'已'" },
-            { question: "《项脊轩志》中，描写了项脊轩庭阶上人与自然和谐相处的景象的句子是：________，________。", answer: ["鸟时来啄食", "人至不去"], keywords: ["鸟时来啄食", "人至不去"], hint: "注意'啄'字的写法" },
-            { question: "《项脊轩志》中，描写了项脊轩里面有书香之味的句子是：________，________。", answer: ["借书满架", "偃仰啸歌"], keywords: ["借书满架", "偃仰啸歌"], hint: "注意'偃仰'二字的写法" },
-            { question: "《项脊轩志》中，描写在明月之夜，附近桂树的影子落在半墙上随风移动的句子是：________，________。", answer: ["桂影斑驳", "风移影动"], keywords: ["桂影斑驳", "风移影动"], hint: "注意'斑驳'二字的写法" },
-            { question: "《项脊轩志》中，描写老妪口中转述的作者母亲对子女嘘寒问暖的句子是：________？________？", answer: ["儿寒乎", "欲食乎"], keywords: ["儿寒乎", "欲食乎"], hint: "注意两个问号" },
-            { question: "《项脊轩志》中，作者的感情基调由'喜'转'悲'的过渡句是：________，________。", answer: ["多可喜", "亦多可悲"], keywords: ["多可喜", "亦多可悲"], hint: "注意'亦'不是'易'" },
-            { question: "《项脊轩志》中，通过描写妻子转述小妹的话语从而表达对亡妻思念之情的句子是：________，________。", answer: ["闻姊家有阁子", "且何谓阁子也"], keywords: ["闻姊家有阁子", "且何谓阁子也"], hint: "注意'姊'不是'姐'" },
-            { question: "《项脊轩志》结尾，作者睹物思人：'________，________'不言情而情无限。", answer: ["吾妻死之年所手植也", "今已亭亭如盖矣"], keywords: ["吾妻死之年所手植也", "今已亭亭如盖矣"], hint: "注意'亭亭'的写法" }
-        ];
+<script>
+    // 基础配置与游戏状态
+    const container = document.getElementById('gameContainer');
+    const tom = document.getElementById('tom');
+    const quizPanel = document.getElementById('quizPanel');
+    const scoreVal = document.getElementById('scoreVal');
+    const progressVal = document.getElementById('progressVal');
+    
+    let score = 0;
+    let isJumping = false;
+    let gameActive = false;
+    let gameElements = [];
+    let gameDistance = 0;
+    const maxDistance = 2000; // 达到此距离通关
+    
+    // 文言文题库（可以根据教学进度自行增删）
+    const quizBank = [
+        { q: "“学而时习之，不亦说乎”中的“说”通假哪个字？", a: ["悦（愉快）", "说（说话）", "税（税收）", "脱（脱离）"], right: 0 },
+        { q: "“温故而知新”中，“故”的意思是什么？", a: ["故意", "缘故", "旧的知识", "死去的人"], right: 2 },
+        { q: "“三人行，必有我师焉”中的“焉”是什么词性词义？", a: ["代词：他们", "语气词：啊", "兼词：在其中", "连词：然后"], right: 2 },
+        { q: "“逝者如斯夫，不舍昼夜”中，孔子是用什么来比喻消逝的时间？", a: ["奔流的河水", "天上的云彩", "吹过的风", "凋谢的花朵"], right: 0 }
+    ];
+
+    // 汤姆猫跳跃逻辑
+    function jump() {
+        if (isJumping || !gameActive || quizPanel.classList.contains('active')) return;
+        isJumping = true;
+        tom.classList.remove('running');
         
-        const chenQingBiaoQuestions = [
-            { question: "《陈情表》中，李密用'________，________'作为'陈情'的开始，同时也是全文苦情的总括。", answer: ["臣以险衅", "夙遭闵凶"], keywords: ["臣以险衅", "夙遭闵凶"], hint: "注意'闵'是通假字，通'悯'" },
-            { question: "《陈情表》中，李密提到自己早年丧父的两句是：________，________。", answer: ["生孩六月", "慈父见背"], keywords: ["生孩六月", "慈父见背"], hint: "注意'见背'是去世的婉辞" },
-            { question: "《陈情表》中，提到自己从小体弱多病、发育迟缓的两句是：________，________。", answer: ["臣少多疾病", "九岁不行"], keywords: ["臣少多疾病", "九岁不行"], hint: "注意'不行'是古义" },
-            { question: "《陈情表》中，提到每天只有自己的身体和影子相互安慰的两句是：________，________。", answer: ["茕茕孑立", "形影相吊"], keywords: ["茕茕孑立", "形影相吊"], hint: "注意'茕茕孑立'的写法" },
-            { question: "《陈情表》中，李密说如果自己没有祖母，则'________'；如果祖母没有自己，则'________'。", answer: ["无以至今日", "无以终余年"], keywords: ["无以至今日", "无以终余年"], hint: "注意两个'无以'" },
-            { question: "《陈情表》中，李密用'________，________'两句写出了他的祖母随时可能死亡的状况。", answer: ["人命危浅", "朝不虑夕"], keywords: ["人命危浅", "朝不虑夕"], hint: "注意'朝不虑夕'的写法" },
-            { question: "《陈情表》中，写明母孙二人命运一体实难相离的请辞原因：________，________。", answer: ["更相为命", "是以区区不能废远"], keywords: ["更相为命", "是以区区不能废远"], hint: "注意'区区'的意思" },
-            { question: "《陈情表》中，李密用'________，________'两句写出了自己的两难处境。", answer: ["臣之进退", "实为狼狈"], keywords: ["臣之进退", "实为狼狈"], hint: "注意'狼狈'的写法" },
-            { question: "《陈情表》中，表明自己与祖母相依为命实难相离的原因是：________，________。", answer: ["母孙二人", "更相为命"], keywords: ["母孙二人", "更相为命"], hint: "注意'母孙'不是'祖孙'" },
-            { question: "《陈情表》中，表明自己将会终身报答朝廷知遇之恩的句子是：________，________。", answer: ["臣生当陨首", "死当结草"], keywords: ["臣生当陨首", "死当结草"], hint: "注意'陨首'不是'殒首'" }
-        ];
+        let position = 120; // 起始高度
+        let upInterval = setInterval(() => {
+            if (position >= 280) { // 最高点
+                clearInterval(upInterval);
+                let downInterval = setInterval(() => {
+                    if (position <= 120) { // 回到地面
+                        clearInterval(downInterval);
+                        isJumping = false;
+                        if (gameActive && !quizPanel.classList.contains('active')) {
+                            tom.classList.add('running');
+                        }
+                    }
+                    position -= 6;
+                    tom.style.bottom = position + 'px';
+                }, 15);
+            }
+            position += 8;
+            tom.style.bottom = position + 'px';
+        }, 15);
+    }
+
+    // 键盘与点击监听
+    document.addEventListener('keydown', (e) => { if (e.code === 'Space') jump(); });
+    container.addEventListener('click', jump);
+
+    // 游戏核心循环
+    function gameLoop() {
+        if (!gameActive) return;
         
-        const backupXiangJiXuan = [
-            { question: "《项脊轩志》中，'________，________'，时间长了可以根据足音来辨别是何人。", answer: ["久之", "能以足音辨人"], keywords: ["久之", "能以足音辨人"], hint: "注意'扃牖'的意思" }
-        ];
-        const backupChenQingBiao = [
-            { question: "《陈情表》中，李密告诉晋武帝，祖母'________，________'，自己为其侍奉汤药。", answer: ["夙婴疾病", "常在床蓐"], keywords: ["夙婴疾病", "常在床蓐"], hint: "注意'蓐'的写法" }
-        ];
-        
-        let gameState = { currentLevel: 1, currentQuestion: 0, coins: 0, lives: 3, wrongCount: 0, totalWrong: 0, isRunning: false, isJumping: false, gameObjects: [], usedBackup: false, questions: [] };
-        
-        const tomCat = document.getElementById('tomCat');
-        const quizPanel = document.getElementById('quizPanel');
-        const quizQuestion = document.getElementById('quizQuestion');
-        const quizInput = document.getElementById('quizInput');
-        const quizHint = document.getElementById('quizHint');
-        const quizTitle = document.getElementById('quizTitle');
-        const startScreen = document.getElementById('startScreen');
-        const resultScreen = document.getElementById('resultScreen');
-        const levelText = document.getElementById('levelText');
-        const questionNum = document.getElementById('questionNum');
-        const coinCount = document.getElementById('coinCount');
-        const livesContainer = document.getElementById('livesContainer');
-        const levelBadge = document.getElementById('levelBadge');
-        const gameObjectsContainer = document.getElementById('gameObjects');
-        const scrollingBg = document.getElementById('scrollingBg');
-        
-        let audioCtx = null;
-        function initAudio() {
-            try {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (!audioCtx && AudioContextClass) {
-                    audioCtx = new AudioContextClass();
-                }
-                if (audioCtx && audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-            } catch (e) { console.warn("音频初始化被拦截或不支持"); }
+        // 游戏处于答题暂停状态
+        if (quizPanel.classList.contains('active')) {
+            requestAnimationFrame(gameLoop);
+            return;
         }
+
+        gameDistance += 2;
+        let progress = Math.min(Math.round((gameDistance / maxDistance) * 100), 100);
+        progressVal.innerText = progress + "%";
         
-        function playSound(type) {
-            if (!audioCtx) return;
-            try {
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
+        if (gameDistance >= maxDistance) {
+            endGame();
+            return;
+        }
+
+        // 随机生成障碍物或金币
+        if (Math.random() < 0.015 && gameElements.length < 3) {
+            const lastElem = gameElements[gameElements.length - 1];
+            if (!lastElem || parseInt(lastElem.style.right) > 250) {
+                createRandomElement();
+            }
+        }
+
+        // 移动元素并进行碰撞检测
+        for (let i = gameElements.length - 1; i >= 0; i--) {
+            let elem = gameElements[i];
+            let right = parseInt(elem.style.right) || 0;
+            right += 5; // 移动速度
+            elem.style.right = right + 'px';
+
+            // 越界移除
+            if (right > 900) {
+                elem.remove();
+                gameElements.splice(i, 1);
+                continue;
+            }
+
+            // 碰撞检测计算
+            let tomRect = tom.getBoundingClientRect();
+            let elemRect = elem.getBoundingClientRect();
+
+            if (
+                tomRect.left < elemRect.right &&
+                tomRect.right > elemRect.left &&
+                tomRect.top < elemRect.bottom &&
+                tomRect.bottom > elemRect.top
+            ) {
+                if (elem.classList.contains('obstacle')) {
+                    // 撞到障碍物扣分并移除障碍物
+                    score = Math.max(0, score - 10);
+                    scoreVal.innerText = score;
+                    elem.remove();
+                    gameElements.splice(i, 1);
+                    // 闪红特效
+                    container.style.borderColor = '#ff0000';
+                    setTimeout(() => container.style.borderColor = '#e94560', 200);
+                } else if (elem.classList.contains('coin')) {
+                    // 吃到金币，触发答题
+                    elem.remove();
+                    gameElements.splice(i, 1);
+                    triggerQuiz();
+                }
+            }
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    // 创建随机障碍或金币
+    function createRandomElement() {
+        const isCoin = Math.random() > 0.4;
+        const elem = document.createElement('div');
+        elem.className = isCoin ? 'coin' : 'obstacle';
+        elem.style.right = '-50px';
+        container.appendChild(elem);
+        gameElements.push(elem);
+    }
+
+    // 触发文言文答题
+    function triggerQuiz() {
+        tom.classList.remove('running');
+        quizPanel.classList.add('active');
+        
+        // 随机抽题
+        const currentQuiz = quizBank[Math.floor(Math.random() * quizBank.length)];
+        document.getElementById('questionText').innerText = currentQuiz.q;
+        
+        const optionsContainer = document.getElementById('optionsContainer');
+        optionsContainer.innerHTML = '';
+        
+        currentQuiz.a.forEach((optionText, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-btn';
+            btn.innerText = `${String.fromCharCode(65 + index)}. ${optionText}`;
+            btn.onclick = () => {
+                if (index === currentQuiz.right) {
+                    score += 50; // 答对奖励高分
+                    container.style.borderColor = '#00ff00';
+                } else {
+                    score = Math.max(0, score - 20); // 答错惩罚
+                    container.style.borderColor = '#ff0000';
+                }
+                scoreVal.innerText = score;
+                setTimeout(() => container.style.borderColor = '#e94560', 300);
                 
-                switch(type) {
-                    case 'correct':
-                        oscillator.frequency.setValueAtTime(523, audioCtx.currentTime);
-                        oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
-                        oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2);
-                        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                        oscillator.start(audioCtx.currentTime); oscillator.stop(audioCtx.currentTime + 0.4);
-                        break;
-                    case 'wrong':
-                        oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
-                        oscillator.frequency.setValueAtTime(150, audioCtx.currentTime + 0.2);
-                        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                        oscillator.start(audioCtx.currentTime); oscillator.stop(audioCtx.currentTime + 0.4);
-                        break;
-                    case 'coin':
-                        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-                        oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime + 0.1);
-                        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                        oscillator.start(audioCtx.currentTime); oscillator.stop(audioCtx.currentTime + 0.2);
-                        break;
-                    case 'jump':
-                        oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                // 关闭面板，恢复游戏
+                quizPanel.classList.remove('active');
+                if (!isJumping) tom.classList.add('running');
+            };
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // 游戏生命周期控制
+    function startGame() {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('resultScreen').style.display = 'none';
+        score = 0;
+        gameDistance = 0;
+        scoreVal.innerText = '0';
+        progressVal.innerText = '0%';
+        gameActive = true;
+        tom.classList.add('running');
+        gameLoop();
+    }
+
+    function endGame() {
+        gameActive = false;
+        tom.classList.remove('running');
+        // 清理屏幕上的剩余物体
+        gameElements.forEach(e => e.remove());
+        gameElements = [];
+        
+        document.getElementById('finalScore').innerText = score;
+        document.getElementById('resultScreen').style.display = 'flex';
+    }
+
+    function restartGame() {
+        startGame();
+    }
+</script>
+</body>
+</html>
