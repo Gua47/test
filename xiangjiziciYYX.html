@@ -2,498 +2,575 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="touch-callout" content="none">
-    <title>项脊轩志·文言字词练习</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汤姆猫文言文跑酷</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:"PingFang SC","微软雅黑",sans-serif;-webkit-font-smoothing: antialiased;}
-        *{-webkit-user-select:none;user-select:none;}
-        body{
-            background: linear-gradient(135deg, #f0f9ff 0%, #fcf0ff 100%);
-            padding:0 !important;margin:0 !important;
-            width:100vw;height:100vh;
-            overflow:hidden;
-            overscroll-behavior: none;
-            animation: pageFade 0.8s ease forwards;
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        @keyframes pageFade { from{opacity:0;} to{opacity:1;} }
-
-        .rule-modal{
-            position: fixed;top:0;left:0;
-            width:100vw;height:100vh;
-            background: rgba(0,0,0,0.6);
-            display: flex;align-items: center;justify-content: center;
-            z-index: 999;display: none;
-            backdrop-filter: blur(4px);
+        
+        body {
+            font-family: 'Noto Serif SC', 'STKaiti', 'KaiTi', serif;
+            background: #1a1a2e;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .rule-content{
-            background: #fff;width:90%;max-width:480px;
-            padding:15px;border-radius:16px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        .rule-content h3{
-            color:#6a94ff;text-align:center;margin-bottom:8px;font-size:16px;
-        }
-        .rule-content p{line-height:1.5;margin:4px 0;color:#333;font-size:12px;}
-        .close-rule{
-            background:#6a94ff;color:white;border:none;
-            padding:6px 16px;border-radius:8px;margin-top:10px;width:100%;
-            font-size:12px;cursor:pointer;display:block;
-            transition: 0.2s;
-        }
-        .close-rule:hover{transform: scale(1.03);}
-
-        .landscape-tip{
-            display:none;text-align:center;font-size:9px;color:#ff6b81;
-            padding:2px 6px;background: #fff0f2;border-radius:10px;margin:0 auto;
-        }
-        @media screen and (orientation:portrait) and (max-width:768px) {
-            .landscape-tip{display:block;}
-            .main-content{display:none !important;}
-        }
-
-        .page{display:none;}
-        .active{display:block;animation: fadeIn 0.3s ease forwards;}
-        @keyframes fadeIn {from{opacity:0;}to{opacity:1;}}
-
-        /* 仅修改这里：首页上移到最顶部 */
-        #home {text-align: center;padding-top:5vh;}
-        .title{
-            text-align:center;font-size:18px;margin:20px 0;
-            background:linear-gradient(90deg,#6a94ff,#8ab4ff);
-            -webkit-background-clip:text;background-clip:text;color:transparent;
-            font-weight:600;letter-spacing:0.3px;
-        }
-        .sub-title{
-            font-size:14px;color:#666;margin-bottom:30px;
-        }
-        .difficulty-btn{
-            display:block;margin:15px auto;
-            padding:12px 30px;font-size:15px;
-            border:none;border-radius:30px;
-            cursor:pointer;transition:0.3s;
-            width:200px;
-        }
-        #easyBtn{
-            background:linear-gradient(90deg,#4facfe,#00f2fe);
-            color:white;
-        }
-        #hardBtn{
-            background:linear-gradient(90deg,#fa709a,#fee140);
-            color:white;
-        }
-        .difficulty-btn:hover{transform: translateY(-3px);box-shadow:0 5px 15px rgba(0,0,0,0.1);}
-        .rule-btn{
-            background:#ffb6c1;color:white;border:none;
-            padding:8px 20px;border-radius:8px;margin:20px auto;
-            font-size:12px;cursor:pointer;
-            transition: 0.3s ease;
-        }
-
-        #gamePage .title{
-            font-size: 14px !important;margin: 5px 0 !important;
-        }
-        .status{
-            display:flex;justify-content:space-evenly;align-items:center;
-            margin: 0 auto;width:99%;
-            background:rgba(255,255,255,0.85);
-            backdrop-filter: blur(10px);
-            padding:6px 4px;border-radius:12px;font-size:10px;
-            box-shadow:0 2px 10px rgba(0,0,0,0.05);
-            gap:5px;flex-wrap:wrap;
-        }
-        .status span{color:#6a94ff;font-size:10px;font-weight:600;}
-        .page-num{color:#ff6b81;font-weight:600;}
-
-        .cards-container{
-            display:flex;width:100vw;
-            height:calc(100vh - 80px);
-            margin:0;padding:0 10px;gap:10px;
-        }
-        .word-col, .mean-col{
-            width:50%;height:100%;
-            display:flex;flex-wrap:wrap;align-content:flex-start;justify-content:center;
-            gap:8px;padding:10px;
-            background:rgba(255,255,255,0.7);
-            backdrop-filter: blur(10px);
-            border-radius:16px;
-            overflow-y: auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .card{
-            width:auto;min-width:70px;min-height:40px;
-            color:#fff !important;
+        
+        #gameContainer {
+            width: 900px;
+            height: 600px;
+            position: relative;
+            background: #16213e;
+            border: 4px solid #e94560;
             border-radius: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-            padding: 10px 15px;
-            cursor:pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border:none;
-            display:flex;align-items:center;justify-content:center;
-            word-break:break-all;
-            animation: cardPop 0.5s ease forwards;
-            font-size:13px;
-            font-weight: 600;
-            line-height:1.4;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(233, 69, 96, 0.3);
         }
-        @keyframes cardPop {
-            from{opacity:0;transform: translateY(10px);}
-            to{opacity:1;transform: translateY(0);}
+        
+        /* 汤姆猫样式 */
+        .tom-cat {
+            width: 60px;
+            height: 80px;
+            position: absolute;
+            left: 100px;
+            bottom: 120px;
+            z-index: 10;
         }
-        .word-col .card{background:linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);}
-        .mean-col .card{background:linear-gradient(135deg, #e0c3fc 0%, #ecb2f3 100%);}
-
-        .card:hover{transform: scale(1.05);box-shadow: 0 8px 20px rgba(0,0,0,0.12);}
-        .card.active{transform:scale(1.05);box-shadow:0 0 8px #ffd700;background:linear-gradient(135deg, #ffd700, #ffed4e) !important;color:#333 !important;z-index:10;}
-        .card.wrong{background:linear-gradient(135deg,#ff4757,#ff3742) !important;color:#fff !important;animation:shake 0.25s ease-in-out;}
-        .card.hidden{display:none !important;}
-        @keyframes shake{0%{transform:translateX(-2px);}50%{transform:translateX(2px);}100%{transform:translateX(0);}}
-
-        ::-webkit-scrollbar {width: 4px;height: 4px;}
-        ::-webkit-scrollbar-thumb {background: rgba(106,148,255,0.3);border-radius: 2px;}
-        ::-webkit-scrollbar-track {background: transparent;}
-
-        #resultPage {
-            text-align:center;
-            padding:20px;
-            width:100vw;
-            height:100vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+        
+        .tom-body {
+            width: 50px;
+            height: 55px;
+            background: #4a90d9;
+            border-radius: 25px 25px 20px 20px;
+            position: absolute;
+            left: 5px;
+            top: 20px;
+            border: 2px solid #2c5a8a;
         }
-        .rank-box,.wrong-box{
-            background:rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            padding:15px;border-radius:16px;margin:15px auto;width:90%;max-width:500px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        
+        .tom-head {
+            width: 40px;
+            height: 35px;
+            background: #4a90d9;
+            border-radius: 50%;
+            position: absolute;
+            left: 10px;
+            top: 0;
+            border: 2px solid #2c5a8a;
         }
-        .wrong-box{
-            border:1px solid #ffb6c1;
+        
+        .tom-ear {
+            width: 12px;
+            height: 16px;
+            background: #4a90d9;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -8px;
+            border: 2px solid #2c5a8a;
         }
-        .rank-item{padding:8px;margin:5px 0;border-radius:20px;font-size:13px;text-align:center;background:linear-gradient(135deg,#6a94ff,#8ab4ff);color:white;}
-        .score-level{font-size:16px;font-weight:bold;margin:10px 0;color:#ff6b81;}
-        .wrong-item{padding:8px;margin:5px 0;background:#ffebf0;color:#ff6b81;font-size:13px;border-radius:20px;}
-        .all-right{text-align:center;color:#2ed573;font-size:16px;padding:10px;font-weight: 600;}
-        .restart-btn{
-            background:linear-gradient(135deg,#ff9bbb,#ffb6c1);
-            color:white;border:none;padding:10px 25px;border-radius:30px;margin:10px;
-            cursor:pointer;font-size:14px;transition:0.3s;
+        
+        .tom-ear.left { left: 8px; transform: rotate(-20deg); }
+        .tom-ear.right { right: 8px; transform: rotate(20deg); }
+        
+        .tom-eye {
+            width: 10px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 8px;
+            border: 1px solid #2c5a8a;
         }
-        .restart-btn:hover{transform: translateY(-3px);}
+        
+        .tom-eye.left { left: 6px; }
+        .tom-eye.right { right: 6px; }
+        
+        .tom-pupil {
+            width: 5px;
+            height: 6px;
+            background: #1a1a2e;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 2px;
+        }
+        
+        .tom-nose {
+            width: 6px;
+            height: 4px;
+            background: #ff6b8a;
+            border-radius: 50%;
+            position: absolute;
+            top: 18px;
+            left: 17px;
+        }
+        
+        .tom-mouth {
+            width: 16px;
+            height: 6px;
+            border: 2px solid #2c5a8a;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            position: absolute;
+            top: 22px;
+            left: 12px;
+        }
+        
+        .tom-whisker {
+            width: 12px;
+            height: 1px;
+            background: #2c5a8a;
+            position: absolute;
+            top: 18px;
+        }
+        
+        .tom-whisker.left1 { left: -8px; top: 16px; }
+        .tom-whisker.left2 { left: -8px; top: 20px; }
+        .tom-whisker.right1 { right: -8px; top: 16px; }
+        .tom-whisker.right2 { right: -8px; top: 20px; }
+        
+        .tom-leg {
+            width: 14px;
+            height: 20px;
+            background: #4a90d9;
+            border-radius: 0 0 7px 7px;
+            position: absolute;
+            bottom: -18px;
+            border: 2px solid #2c5a8a;
+            border-top: none;
+        }
+        
+        .tom-leg.left { left: 8px; }
+        .tom-leg.right { right: 8px; }
+        
+        .tom-tail {
+            width: 8px;
+            height: 25px;
+            background: #4a90d9;
+            border-radius: 0 0 4px 4px;
+            position: absolute;
+            right: -6px;
+            top: 30px;
+            transform: rotate(-30deg);
+            border: 2px solid #2c5a8a;
+        }
+        
+        .tom-belly {
+            width: 30px;
+            height: 25px;
+            background: #87ceeb;
+            border-radius: 50%;
+            position: absolute;
+            left: 10px;
+            top: 35px;
+        }
+        
+        /* 跑步动画 */
+        @keyframes run {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(15deg); }
+        }
+        
+        .running .tom-leg.left { animation: run 0.2s infinite; }
+        .running .tom-leg.right { animation: run 0.2s infinite reverse; }
+        .running .tom-tail { animation: run 0.15s infinite; }
+        
+        /* 地面 */
+        .ground {
+            width: 100%;
+            height: 120px;
+            background: #0f3460;
+            position: absolute;
+            bottom: 0;
+            border-top: 3px solid #e94560;
+        }
+        
+        /* 障碍物 */
+        .obstacle {
+            width: 40px;
+            height: 50px;
+            background: #e94560;
+            position: absolute;
+            bottom: 120px;
+            border-radius: 5px 5px 0 0;
+            border: 2px solid #c73e54;
+        }
+        
+        .obstacle::before {
+            content: '❌';
+            position: absolute;
+            top: 10px;
+            left: 8px;
+            font-size: 20px;
+        }
+        
+        /* 金币 */
+        .coin {
+            width: 34px;
+            height: 34px;
+            background: #ffd700;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 240px;
+            border: 3px solid #ffaa00;
+            box-shadow: 0 0 10px #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #b8860b;
+            font-size: 14px;
+        }
+        
+        .coin::after {
+            content: '文';
+        }
+        
+        /* 答题面板 */
+        #quizPanel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background: rgba(22, 33, 62, 0.95);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            padding: 30px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+        
+        #quizPanel.active { display: block; }
+        .quiz-title { color: #ffd700; font-size: 24px; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        .quiz-question { color: #eaeaea; font-size: 18px; line-height: 1.8; margin-bottom: 20px; text-align: center; }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+        .quiz-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0f3460;
+            border: 2px solid #4a90d9;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: 'Noto Serif SC', serif;
+            transition: all 0.2s;
+            text-align: left;
+            padding-left: 20px;
+        }
+        .quiz-btn:hover { background: #4a90d9; border-color: #ffd700; }
+        
+        /* 顶部信息栏 */
+        #topBar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 50;
+            color: #ffd700;
+            font-size: 16px;
+        }
+        .info-item { display: flex; align-items: center; gap: 5px; }
+        .info-label { color: #87ceeb; }
+        
+        /* 开始与结束画面 */
+        #startScreen, #resultScreen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #16213e;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 200;
+        }
+        #resultScreen { background: rgba(0,0,0,0.9); display: none; }
+        .start-title { font-size: 42px; color: #e94560; margin-bottom: 20px; text-shadow: 0 0 20px rgba(233, 69, 96, 0.5); }
+        .start-subtitle { font-size: 20px; color: #87ceeb; margin-bottom: 40px; }
+        .action-btn {
+            padding: 15px 50px; font-size: 22px; background: #e94560; border: none; border-radius: 15px;
+            color: white; cursor: pointer; font-family: 'Noto Serif SC', serif; transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
+        }
+        .action-btn:hover { background: #ff6b8a; transform: scale(1.05); }
+        .instructions { margin-top: 30px; color: #aaa; font-size: 14px; text-align: center; line-height: 2; }
+        
+        .result-title { font-size: 36px; margin-bottom: 20px; }
+        .result-title.win { color: #ffd700; }
+        .result-score { font-size: 24px; color: #87ceeb; margin-bottom: 30px; }
     </style>
 </head>
 <body>
 
-<div class="rule-modal" id="ruleModal">
-    <div class="rule-content">
-        <h3>🎮 游戏规则</h3>
-        <p>✅ 自动分页跳转，同侧可自由切换</p>
-        <p>❌ 配对错误亮红震动，0.3秒后恢复</p>
-        <p>🏆 评分：正确率+用时比值，满分100分</p>
-        <p>⭐ 评级：90+大师｜80+博学｜70+熟练｜60+合格</p>
-        <button class="close-rule" onclick="closeRule()">我知道了</button>
-    </div>
-</div>
-
-<div class="landscape-tip">📱 请横屏使用，作答更舒适</div>
-<div class="main-content">
-
-    <div class="page active" id="home">
-        <h2 class="title">📜《项脊轩志》文言练习</h2>
-        <p class="sub-title">请选择难度模式</p>
-        <button class="difficulty-btn" id="easyBtn">📖 简单模式（基础）</button>
-        <button class="difficulty-btn" id="hardBtn">⚔️ 困难模式（挑战）</button>
-        <button class="rule-btn" onclick="showRule()">查看游戏规则</button>
+<div id="gameContainer">
+    <!-- 顶部状态栏 -->
+    <div id="topBar">
+        <div class="info-item"><span class="info-label">得分:</span><span id="scoreVal">0</span></div>
+        <div class="info-item"><span class="info-label">进度:</span><span id="progressVal">0%</span></div>
     </div>
 
-    <div class="page" id="gamePage">
-        <h2 class="title" id="modeTitle">🎯 答题中</h2>
-        <div class="status">
-            <div>用时：<span id="timer">0</span>s</div>
-            <div>得分：<span id="score">0</span></div>
-            <div class="page-num">页：<span id="nowPage">1</span>/<span id="totalPage">0</span></div>
+    <!-- 汤姆猫 -->
+    <div id="tom" class="tom-cat running">
+        <div class="tom-ear left"></div>
+        <div class="tom-ear right"></div>
+        <div class="tom-head">
+            <div class="tom-eye left"><div class="tom-pupil"></div></div>
+            <div class="tom-eye right"><div class="tom-pupil"></div></div>
+            <div class="tom-nose"></div>
+            <div class="tom-mouth"></div>
+            <div class="tom-whisker left1"></div>
+            <div class="tom-whisker left2"></div>
+            <div class="tom-whisker right1"></div>
+            <div class="tom-whisker right2"></div>
         </div>
-        <div class="cards-container">
-            <div class="word-col" id="leftCol"></div>
-            <div class="mean-col" id="rightCol"></div>
+        <div class="tom-body">
+            <div class="tom-belly"></div>
+        </div>
+        <div class="tom-tail"></div>
+        <div class="tom-leg left"></div>
+        <div class="tom-leg right"></div>
+    </div>
+
+    <!-- 地面 -->
+    <div class="ground"></div>
+
+    <!-- 答题面板 -->
+    <div id="quizPanel">
+        <div class="quiz-title">💡 文言断句与翻译</div>
+        <div id="questionText" class="quiz-question">加载中...</div>
+        <div class="quiz-options" id="optionsContainer"></div>
+    </div>
+
+    <!-- 开始画面 -->
+    <div id="startScreen">
+        <div class="start-title">汤姆猫文言文跑酷</div>
+        <div class="start-subtitle">御猫凌空踏步，妙解圣贤之言</div>
+        <button class="action-btn" onclick="startGame()">开始游戏</button>
+        <div class="instructions">
+            操作指南：按下 <b>空格键 (Space)</b> 或 <b>点击游戏画面</b> 触发跳跃<br>
+            碰触【金币】触发文言文答题，答对获得高额积分！避免碰撞【❌障碍物】！
         </div>
     </div>
 
-    <div class="page" id="resultPage">
-        <h2 class="title">🏆 答题完成</h2>
-        <div class="rank-box" id="userRank"></div>
-        <h3 class="sub-title">❌ 错题回顾</h3>
-        <div class="wrong-box" id="wrongList"></div>
-        <button class="restart-btn" onclick="backToHome()">返回主页</button>
-        <button class="restart-btn" onclick="restartGame()">重新挑战</button>
+    <!-- 结算画面 -->
+    <div id="resultScreen">
+        <div class="result-title win">试炼结束</div>
+        <div class="result-score">最终得分: <span id="finalScore">0</span></div>
+        <button class="action-btn" onclick="restartGame()">再来一次</button>
     </div>
-
 </div>
 
 <script>
-    const easyQuestions = [
-        ["旧","旧日的，原来的"],
-        ["方丈","一丈见方"],
-        ["渗漉","渗漏"],
-        ["无可置者","没有可以挪置（桌案）的地方"],
-        ["前","指阁子北面，因这阁子是“北向”的"],
-        ["垣墙周庭，以当南日","四周围绕院子砌上墙，用（北墙）对着南边射来的日光（使其反照室内）。垣墙，用作动词，砌上垣墙。垣，矮墙，也泛指墙"],
-        ["洞然","明亮的样子"],
-        ["栏楯（shǔn）","栏杆"],
-        ["增胜","增加光彩。胜，美"],
-        ["偃仰","俯仰，这里指安居、休息"],
-        ["啸歌","长啸歌吟"],
-        ["冥然兀坐","静静地独自端坐"],
-        ["三五之夜","农历每月十五的夜晚"],
-        ["珊珊","树影摇动的样子"],
-        ["先是","在此以前"],
-        ["迨（dài）诸父异爨（cuàn）","等到伯、叔分家。迨，等到。诸父，伯父、叔父的统称。异爨，分灶做饭，意思是分家"],
-        ["往往而是","到处都是"],
-        ["东犬西吠","东家的狗（听到西家的声音）就对着西家叫"],
-        ["客逾庖而宴","越过厨房去吃饭。因为多置小门墙，所以宴客的时候客人要经过厨房"],
-        ["已","不久后"],
-        ["先大母","去世的祖母。下文的“先妣”，指去世的母亲"],
-        ["乳二世","给父亲和自己两代人喂过奶。乳，喂奶、哺育"],
-        ["抚","爱护。这里是“对待”的意思"],
-        ["中闺","内室"],
-        ["而母立于兹","你的母亲（曾经）站在这儿。而，你的"],
-        ["过余","到我（这里来）。意思是来看我"],
-        ["大类","很像"],
-        ["比去","等到离开的时候"],
-        ["阖（hé）","关闭"],
-        ["不效","没有效果。这里指科举上无所成就"],
-        ["象笏（hù）","象牙制的手板。古代品级较高的官员朝见君主时执笏，供指画和记事。笏多以象牙、玉制成"],
-        ["太常公","归有光祖母的祖父夏昶（chǎng）曾任太常寺卿"],
-        ["瞻顾遗迹","瞻视回顾先人留下的旧物"],
-        ["扃（jiōng）牖","关上窗户。扃，关闭"],
-        ["殆","恐怕，可能"],
-        ["余既为此志","我已经作了这篇志。此志，指本篇中这一句之上的内容，从这一句以下是后来补写的"],
-        ["来归","指嫁到我家来"],
-        ["书","写字"],
-        ["归宁","出嫁的女子回娘家省亲"],
-        ["述诸小妹语","（回我家后）转述她小妹们的话"],
-        ["且","助词，用于句首。这里有“那么”的意思"],
-        ["制","形制，规制"],
-        ["盖","伞盖"]
+    // 基础配置与游戏状态
+    const container = document.getElementById('gameContainer');
+    const tom = document.getElementById('tom');
+    const quizPanel = document.getElementById('quizPanel');
+    const scoreVal = document.getElementById('scoreVal');
+    const progressVal = document.getElementById('progressVal');
+    
+    let score = 0;
+    let isJumping = false;
+    let gameActive = false;
+    let gameElements = [];
+    let gameDistance = 0;
+    const maxDistance = 2000; // 达到此距离通关
+    
+    // 文言文题库（可以根据教学进度自行增删）
+    const quizBank = [
+        { q: "“学而时习之，不亦说乎”中的“说”通假哪个字？", a: ["悦（愉快）", "说（说话）", "税（税收）", "脱（脱离）"], right: 0 },
+        { q: "“温故而知新”中，“故”的意思是什么？", a: ["故意", "缘故", "旧的知识", "死去的人"], right: 2 },
+        { q: "“三人行，必有我师焉”中的“焉”是什么词性词义？", a: ["代词：他们", "语气词：啊", "兼词：在其中", "连词：然后"], right: 2 },
+        { q: "“逝者如斯夫，不舍昼夜”中，孔子是用什么来比喻消逝的时间？", a: ["奔流的河水", "天上的云彩", "吹过的风", "凋谢的花朵"], right: 0 }
     ];
 
-    const hardQuestions = [
-        ["旧","旧日的，原来的。"],
-        ["方丈","一丈见方。"],
-        ["渗漉","渗漏。"],
-        ["无可置者","没有可以挪置（桌案）的地方。"],
-        ["前","指阁子北面，因这阁子是“北向”的。"],
-        ["垣墙周庭，以当南日","四周围绕院子砌上墙，用（北墙）对着南边射来的日光（使其反照室内）。"],
-        ["垣墙","用作动词，砌上垣墙。"],
-        ["垣","矮墙，也泛指墙。"],
-        ["洞然","明亮的样子。"],
-        ["栏楯（shǔn）","栏杆。"],
-        ["增胜","增加光彩。"],
-        ["胜","美。"],
-        ["偃仰","俯仰，这里指安居、休息。"],
-        ["啸歌","长啸歌吟。"],
-        ["冥然兀坐","静静地独自端坐。"],
-        ["三五之夜","农历每月十五的夜晚。"],
-        ["珊珊","树影摇动的样子。"],
-        ["先是","在此以前。"],
-        ["迨（dài）诸父异爨（cuàn）","等到伯、叔分家。"],
-        ["迨","等到。"],
-        ["诸父","伯父、叔父的统称。"],
-        ["异爨","分灶做饭，意思是分家。"],
-        ["往往而是","到处都是。"],
-        ["东犬西吠","东家的狗（听到西家的声音）就对着西家叫。"],
-        ["客逾庖而宴","越过厨房去吃饭。因为多置小门墙，所以宴客的时候客人要经过厨房。"],
-        ["已","不久后。"],
-        ["先大母","去世的祖母。下文的“先妣”，指去世的母亲。"],
-        ["乳二世","给父亲和自己两代人喂过奶。"],
-        ["乳","喂奶、哺育。"],
-        ["抚","爱护。这里是“对待”的意思。"],
-        ["中闺","内室。"],
-        ["而母立于兹","你的母亲（曾经）站在这儿。"],
-        ["而","你的。"],
-        ["过余","到我（这里来）。意思是来看我。"],
-        ["大类","很像。"],
-        ["比去","等到离开的时候。"],
-        ["阖（hé）","关闭。"],
-        ["不效","没有效果。这里指科举上无所成就。"],
-        ["象笏（hù）","象牙制的手板。古代品级较高的官员朝见君主时执笏，供指画和记事。笏多以象牙、玉制成。"],
-        ["瞻顾遗迹","瞻视回顾先人留下的旧物。"],
-        ["扃（jiōng）牖","关上窗户。"],
-        ["扃","关闭。"],
-        ["殆","恐怕，可能。"],
-        ["余既为此志","我已经作了这篇志。此志，指本篇中这一句之上的内容，从这一句以下是后来补写的。"],
-        ["来归","指嫁到我家来。"],
-        ["书","写字。"],
-        ["归宁","出嫁的女子回娘家省亲。"],
-        ["述诸小妹语","（回我家后）转述她小妹们的话。"],
-        ["且","助词，用于句首。这里有“那么”的意思。"],
-        ["制","形制，规制。"],
-        ["盖","伞盖。"]
-    ];
-
-    let currentQuestions = [];
-    let currentMode = "";
-    const pageSize = 9;
-    let currentPage = 1, totalPage = 0, pageDataList = [];
-    let elapsedTime=0,timer,score=0,wrongList=[];
-    let leftSelect = null, rightSelect = null;
-
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    document.getElementById('easyBtn').onclick = () => startGame('easy');
-    document.getElementById('hardBtn').onclick = () => startGame('hard');
-
-    function backToHome() {
-        clearInterval(timer);
-        showPage('home');
-    }
-
-    function startGame(mode) {
-        currentMode = mode;
-        currentQuestions = mode === 'easy' ? easyQuestions : hardQuestions;
-        document.getElementById('modeTitle').innerText = mode === 'easy' ? '📖 简单模式 - 答题中' : '⚔️ 困难模式 - 答题中';
+    // 汤姆猫跳跃逻辑
+    function jump() {
+        if (isJumping || !gameActive || quizPanel.classList.contains('active')) return;
+        isJumping = true;
+        tom.classList.remove('running');
         
-        [elapsedTime,score,wrongList,currentPage] = [0,0,[],1];
-        [leftSelect,rightSelect] = [null,null];
-        
-        initPageData();
-        showPage('gamePage');
-        initCurrentPageCard();
-        startTimer();
-    }
-
-    function initPageData(){
-        pageDataList = [];
-        for(let i=0;i<currentQuestions.length;i+=pageSize) pageDataList.push(currentQuestions.slice(i,i+pageSize));
-        totalPage = pageDataList.length;
-        document.getElementById("totalPage").innerText = totalPage;
-    }
-
-    function initCurrentPageCard(){
-        document.getElementById("nowPage").innerText = currentPage;
-        let L=document.getElementById("leftCol"),R=document.getElementById("rightCol");
-        L.innerHTML=R.innerHTML="";
-        [leftSelect,rightSelect] = [null,null];
-        let nowData = pageDataList[currentPage-1];
-        nowData.forEach(q=>{L.innerHTML+=`<div class="card" data-k="${q[0]}">${q[0]}</div>`});
-        let rand=[...nowData].sort(()=>Math.random()-0.5);
-        rand.forEach(q=>{R.innerHTML+=`<div class="card" data-k="${q[0]}">${q[1]}</div>`});
-        bindClick();
-    }
-
-    function startTimer(){
-        elapsedTime=score=0;
-        document.getElementById("score").innerText=score;
-        clearInterval(timer);
-        timer=setInterval(()=>{
-            elapsedTime++;
-            document.getElementById("timer").innerText=elapsedTime;
-        },1000);
-    }
-
-    function bindClick(){
-        document.querySelectorAll(".card").forEach(c=>{
-            c.onclick=function(){
-                if(this.classList.contains("hidden") || leftSelect===this || rightSelect===this) return;
-                let isLeft = this.parentElement.id === "leftCol";
-                if(isLeft){
-                    leftSelect?.classList.remove("active");
-                    this.classList.add("active");
-                    leftSelect = this;
-                }else{
-                    rightSelect?.classList.remove("active");
-                    this.classList.add("active");
-                    rightSelect = this;
-                }
-                if(leftSelect && rightSelect) checkMatch();
+        let position = 120; // 起始高度
+        let upInterval = setInterval(() => {
+            if (position >= 280) { // 最高点
+                clearInterval(upInterval);
+                let downInterval = setInterval(() => {
+                    if (position <= 120) { // 回到地面
+                        clearInterval(downInterval);
+                        isJumping = false;
+                        if (gameActive && !quizPanel.classList.contains('active')) {
+                            tom.classList.add('running');
+                        }
+                    }
+                    position -= 6;
+                    tom.style.bottom = position + 'px';
+                }, 15);
             }
-        });
+            position += 8;
+            tom.style.bottom = position + 'px';
+        }, 15);
     }
 
-    function checkMatch(){
-        let isCorrect = leftSelect.dataset.k === rightSelect.dataset.k;
-        if(!isCorrect && !wrongList.includes(leftSelect.dataset.k)) wrongList.push(leftSelect.dataset.k);
+    // 键盘与点击监听
+    document.addEventListener('keydown', (e) => { if (e.code === 'Space') jump(); });
+    container.addEventListener('click', jump);
 
-        leftSelect.classList.remove("active");
-        rightSelect.classList.remove("active");
-
-        if(isCorrect){
-            score += 10;
-            leftSelect.classList.add("hidden");
-            rightSelect.classList.add("hidden");
-            [leftSelect,rightSelect] = [null,null];
-        }else{
-            leftSelect.classList.add("wrong");
-            rightSelect.classList.add("wrong");
-            setTimeout(()=>{
-                leftSelect.classList.remove("wrong");
-                rightSelect.classList.remove("wrong");
-                [leftSelect,rightSelect] = [null,null];
-            }, 300);
-        }
-        document.getElementById("score").innerText=score;
-
-        let allCards = document.querySelectorAll(".card");
-        let hideCards = document.querySelectorAll(".card.hidden");
-        if(hideCards.length === allCards.length){
-            currentPage < totalPage ? (currentPage++, initCurrentPageCard()) : endGame();
-        }
-    }
-
-    function endGame(){
-        clearInterval(timer);
-        showPage('resultPage');
-        showRank();
-        showWrong();
-    }
-
-    function showRank(){
-        const correctNum = score / 10;
-        const accuracy = correctNum / currentQuestions.length;
-        const timeCoeff = Math.min((currentQuestions.length * 8) / (elapsedTime || 1), 1.3);
-        let finalScore = Math.min(Math.round(accuracy * 100 * timeCoeff), 100);
-
-        let level = finalScore>=90 ? '文言大师（SS级）⭐' :
-                    finalScore>=80 ? '博学之士（S级）⭐' :
-                    finalScore>=70 ? '熟练掌握（A级）' :
-                    finalScore>=60 ? '合格达标（B级）' : '继续加油（C级）';
-
-        document.getElementById("userRank").innerHTML=`
-            <div class="rank-item">难度：${currentMode==='easy'?'简单模式':'困难模式'}</div>
-            <div class="rank-item">总题数：${currentQuestions.length}</div>
-            <div class="rank-item">答对：${correctNum} 题</div>
-            <div class="rank-item">用时：${elapsedTime} 秒</div>
-            <div class="rank-item score-level">最终得分：${finalScore} 分</div>
-            <div class="rank-item">评级：${level}</div>
-        `;
-    }
-
-    function showWrong(){
-        if(wrongList.length===0){
-            document.getElementById("wrongList").innerHTML=`<div class="all-right">✅ 全部答对！太棒了！</div>`;
+    // 游戏核心循环
+    function gameLoop() {
+        if (!gameActive) return;
+        
+        // 游戏处于答题暂停状态
+        if (quizPanel.classList.contains('active')) {
+            requestAnimationFrame(gameLoop);
             return;
         }
-        let html="";
-        wrongList.forEach(w=>{
-            let ans=currentQuestions.find(q=>q[0]==w);
-            html+=`<div class="wrong-item">${w} → ${ans[1]}</div>`;
+
+        gameDistance += 2;
+        let progress = Math.min(Math.round((gameDistance / maxDistance) * 100), 100);
+        progressVal.innerText = progress + "%";
+        
+        if (gameDistance >= maxDistance) {
+            endGame();
+            return;
+        }
+
+        // 随机生成障碍物或金币
+        if (Math.random() < 0.015 && gameElements.length < 3) {
+            const lastElem = gameElements[gameElements.length - 1];
+            if (!lastElem || parseInt(lastElem.style.right) > 250) {
+                createRandomElement();
+            }
+        }
+
+        // 移动元素并进行碰撞检测
+        for (let i = gameElements.length - 1; i >= 0; i--) {
+            let elem = gameElements[i];
+            let right = parseInt(elem.style.right) || 0;
+            right += 5; // 移动速度
+            elem.style.right = right + 'px';
+
+            // 越界移除
+            if (right > 900) {
+                elem.remove();
+                gameElements.splice(i, 1);
+                continue;
+            }
+
+            // 碰撞检测计算
+            let tomRect = tom.getBoundingClientRect();
+            let elemRect = elem.getBoundingClientRect();
+
+            if (
+                tomRect.left < elemRect.right &&
+                tomRect.right > elemRect.left &&
+                tomRect.top < elemRect.bottom &&
+                tomRect.bottom > elemRect.top
+            ) {
+                if (elem.classList.contains('obstacle')) {
+                    // 撞到障碍物扣分并移除障碍物
+                    score = Math.max(0, score - 10);
+                    scoreVal.innerText = score;
+                    elem.remove();
+                    gameElements.splice(i, 1);
+                    // 闪红特效
+                    container.style.borderColor = '#ff0000';
+                    setTimeout(() => container.style.borderColor = '#e94560', 200);
+                } else if (elem.classList.contains('coin')) {
+                    // 吃到金币，触发答题
+                    elem.remove();
+                    gameElements.splice(i, 1);
+                    triggerQuiz();
+                }
+            }
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    // 创建随机障碍或金币
+    function createRandomElement() {
+        const isCoin = Math.random() > 0.4;
+        const elem = document.createElement('div');
+        elem.className = isCoin ? 'coin' : 'obstacle';
+        elem.style.right = '-50px';
+        container.appendChild(elem);
+        gameElements.push(elem);
+    }
+
+    // 触发文言文答题
+    function triggerQuiz() {
+        tom.classList.remove('running');
+        quizPanel.classList.add('active');
+        
+        // 随机抽题
+        const currentQuiz = quizBank[Math.floor(Math.random() * quizBank.length)];
+        document.getElementById('questionText').innerText = currentQuiz.q;
+        
+        const optionsContainer = document.getElementById('optionsContainer');
+        optionsContainer.innerHTML = '';
+        
+        currentQuiz.a.forEach((optionText, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-btn';
+            btn.innerText = `${String.fromCharCode(65 + index)}. ${optionText}`;
+            btn.onclick = () => {
+                if (index === currentQuiz.right) {
+                    score += 50; // 答对奖励高分
+                    container.style.borderColor = '#00ff00';
+                } else {
+                    score = Math.max(0, score - 20); // 答错惩罚
+                    container.style.borderColor = '#ff0000';
+                }
+                scoreVal.innerText = score;
+                setTimeout(() => container.style.borderColor = '#e94560', 300);
+                
+                // 关闭面板，恢复游戏
+                quizPanel.classList.remove('active');
+                if (!isJumping) tom.classList.add('running');
+            };
+            optionsContainer.appendChild(btn);
         });
-        document.getElementById("wrongList").innerHTML=html;
     }
 
-    function restartGame(){
-        startGame(currentMode);
+    // 游戏生命周期控制
+    function startGame() {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('resultScreen').style.display = 'none';
+        score = 0;
+        gameDistance = 0;
+        scoreVal.innerText = '0';
+        progressVal.innerText = '0%';
+        gameActive = true;
+        tom.classList.add('running');
+        gameLoop();
     }
 
-    function showRule(){document.getElementById("ruleModal").style.display="flex"}
-    function closeRule(){document.getElementById("ruleModal").style.display="none"}
+    function endGame() {
+        gameActive = false;
+        tom.classList.remove('running');
+        // 清理屏幕上的剩余物体
+        gameElements.forEach(e => e.remove());
+        gameElements = [];
+        
+        document.getElementById('finalScore').innerText = score;
+        document.getElementById('resultScreen').style.display = 'flex';
+    }
+
+    function restartGame() {
+        startGame();
+    }
 </script>
 </body>
 </html>
